@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="description" content="Keep learning.">
+
+
+    <meta name="keywords" content="Python,Distributed Computing,AI">
+
+
+<title>Linux学习笔记(一)——Linux的文件与目录 | DingZhi&#39;s Blog</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">DingZhi&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">DingZhi&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?3c2cb6a51b306a50c53ae432e39de395";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">Linux学习笔记(一)——Linux的文件与目录</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Ding Zhi</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">September 16, 2019&nbsp;&nbsp;17:16:53</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/Linux/">Linux</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p><strong><font size="5" color="red" face="楷体">一点碎碎念</font></strong>最近在一直在艰难的自学操作系统，暑假前曾立了个暑假学完Linux的flag，然而flag不出意外的倒了，为了扫清自学操作系统的障碍，最近趁着开学前的空档，开始狂补各种Linux基础知识。之前自己只是在各种形式上接触过Linux，但没有系统学习过相关知识，通过自己这次系统地梳理，也确实学到了很多新的知识，有了很多新的认识（背下来了更多的命令？&lt;雾&gt;）.这篇博客从9月6号一直写到了9月16号，终于把Linux的第一篇博文大概写（chao）好了（开学第一周效率果然好低）.下面就进入正文吧~</p>
+<blockquote>
+<p>Linux 最优秀的地方之一就在于其多人多任务环境。而为了让各个使用者具有较保密的文件数据，因此文件的权限管理就变的很重要了。 Linux 一般将文件可存取的身份分为三个类别，分别是owner/group/others，且三种身份各有read/write/execute 等权限。另外，我们将探讨在Linux 中的每个目录/文件分别代表什么意义。此外，在认识了Linux 系统下的文件权限概念以及目录的配置后，我们将进一步的操作与管理文件及目录。包括在不同的目录间变换、 建立与删除目录、建立与删除文件，还有寻找文件、查阅文件内容等。</p>
+</blockquote>
+<h2 id="使用者与群组"><a href="#使用者与群组" class="headerlink" title="使用者与群组"></a>使用者与群组</h2><ul>
+<li><p>明确三个概念：<strong>文件拥有者、群组、其他人</strong></p>
+</li>
+<li><p>Linux 用户身份与群组记录的文件</p>
+<p>在我们 Linux 系统当中，默认的情况下，所有的系统上的账号与一般身份使用者，还有那个root 的相关信息，都是记录在/etc/passwd 这个文件内的。至于个人的密码则是记录在/etc/shadow 这个文件下。此外，Linux 所有的组名都纪录在/etc/group 内！这三个文件可以说是Linux 系统里面账号、密码、群组信息的集中地呀！ 不要随便删除这三个文件啊！</p>
+</li>
+</ul>
+<h2 id="Linux-文件权限"><a href="#Linux-文件权限" class="headerlink" title="Linux 文件权限"></a>Linux 文件权限</h2><h3 id="Linux文件属性"><a href="#Linux文件属性" class="headerlink" title="Linux文件属性"></a>Linux文件属性</h3><p>我们在terminal下使用<code>su -</code>切换身份成为 root后使用<code>ls -al</code>命令，得到类似如下界面：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">[dingzhi@study ~]$ su - # 先来切换一下身份看看</span><br><span class="line">Password:</span><br><span class="line">Last login: Tue Jun 2 19:32:31 CST 2015 on tty2</span><br><span class="line">[root@study ~]# ls -al</span><br><span class="line">total 48</span><br><span class="line">dr-xr-x---. 5 root root 4096 May 29 16:08 .</span><br><span class="line">dr-xr-xr-x. 17 root root 4096 May 4 17:56 ..</span><br><span class="line">-rw-------. 1 root root 1816 May 4 17:57 anaconda-ks.cfg</span><br><span class="line">-rw-------. 1 root root 927 Jun 2 11:27 .bash_history</span><br><span class="line">-rw-r--r--. 1 root root 18 Dec 29 2013 .bash_logout</span><br><span class="line">-rw-r--r--. 1 root root 176 Dec 29 2013 .bash_profile</span><br><span class="line">-rw-r--r--. 1 root root 176 Dec 29 2013 .bashrc</span><br><span class="line">drwxr-xr-x. 3 root root 17 May 6 00:14 .config &lt;=范例说明处</span><br><span class="line">drwx------. 3 root root 24 May 4 17:59 .dbus</span><br><span class="line">-rw-r--r--. 1 root root 1864 May 4 18:01 initial-setup-ks.cfg &lt;=范例说明处</span><br><span class="line">[ 1 ][ 2 ][ 3 ][ 4 ][ 5 ][ 6 ] [ 7 ]</span><br><span class="line">[ 权限 ][连结][拥有者][群组][文件容量][ 修改日期 ] [ 檔名 ]</span><br></pre></td></tr></table></figure>
+
+<p>下面解释这一栏的七个字段（重要）：</p>
+<p><img src="/articles/Linux-1/1567784598672.png" alt="1567784598672"></p>
+<p>第一栏代表这个文件的类型与权限(permission)：<br>这个地方最需要注意了！仔细看的话，你应该可以发现这一栏其实共有十个字符：</p>
+<p><img src="/articles/Linux-1/1567784841158.png" alt="1567784841158"></p>
+<ul>
+<li><p>第一个字符代表这个文件是目录、文件或链接文件等等：<br>  ​        o 当为[ d ]则是目录，例如上表档名为<code>.config</code>的那一行；<br>  ​        o 当为[ - ]则是文件，例如上表档名为<code>initial-setup-ks.cfg</code>那一行；<br>  ​        o 若是[ l ]则表示为链接文件；<br>  ​        o 若是[ b ]则表示为装置文件里面的可供储存的接口设备(可随机存取装置)；<br>  ​        o 若是[ c ]则表示为装置文件里面的串行端口设备，例如键盘、鼠标(一次性读取装置)。</p>
+<p>  接下来的字符中，以三个为一组，且均为<code>rwx</code>的三个参数的组合。其中，[ r ]代表可读(read)、[ w ]代表可写(write)、[ x ]代表可执行(execute)。要注意的是，这三个权限的位置不会改变，如果没有权限，就会出现减号[ - ]而已。<br>  ​        o 第一组为文件拥有者可具备的权限，以<code>initial-setup-ks.cfg</code>那个文件为例， 该文件的拥有者可以读写，但不可执行；<br>  ​        o 第二组为加入此群组之账号的权限；<br>  ​        o 第三组为非本人且没有加入本群组之其他账号的权限。</p>
+</li>
+<li><p>第二栏表示有多少档名连结到此节点(i-node)：每个文件都会将他的权限与属性记录到文件系统的i-node 中，不过，我们使用的目录树却是使用文件名来记录， 因此每个档名就会连结到一个 i-node 啰！这个属性记录的，就是有多少不同的档名连结到相同的一个i-node 号码去就是了。关于 i-node 的相关资料我们会在谈到文件系统时再加强介绍的。</p>
+</li>
+<li><p>第三栏表示这个文件(或目录)的拥有者账号</p>
+</li>
+<li><p>第四栏表示这个文件的所属群组:在 Linux 系统下，你的账号会加入于一个或多个的群组中。举刚刚我们提到的例子，class1, class2, class3均属于projecta 这个群组，假设某个文件所属的群组为projecta，且该文件的权限如上图所示(-rwxrwx—)，则 class1, class2, class3 三人对于该文件都具有可读、可写、可执行的权限(看群组权限)。但如果是不属于 projecta 的其他账号，对于此文件就不具有任何权限了。</p>
+</li>
+<li><p>第五栏为这个文件的容量大小，默认单位为bytes；</p>
+</li>
+<li><p>第六栏为这个文件的建档日期或者是最近的修改日期：这一栏的内容分别为日期(月/日)及时间。如果这个文件被修改的时间距离现在太久了，那么时间部分会仅显示年份而已。如果想要显示完整的时间格式，可以利用ls 的选项，亦即<code>ls -l --full-time</code>就能够显示出完整的时间格式了！包括年、月、日、时间喔。另外，如果你当初是以繁体中文安装你的 Linux 系统，那么日期字段将会以中文来显示。可惜的是，中文并没有办法在纯文本的终端机模式中正确的显示，所以此栏会变成乱码。那你就得要使用<code>export LC_ALL=en_US.utf8</code>来修改语言！如果想要让系统默认的语系变成英文的话，那么你可以修改系统配置文件<code>/etc/locale.conf</code>，利用nano 来修改该文件的内容，使LANG 这个变量成为上述的内容即可。</p>
+</li>
+<li><p>第七栏为这个文件的文档名：这个字段就是文档名了。比较特殊的是：如果档名之前多一个<code>.</code>，则代表这个文件为隐藏文件，例如上表中的.config 那一行，该文件就是隐藏档。你可以使用<code>ls</code>及<code>ls -a</code>这两个指令去区别隐藏文件。</p>
+</li>
+</ul>
+<p><strong>此部分的几个注意要点：</strong></p>
+<ul>
+<li>root 基本上是不受系统的权限所限制的， 所以无论文件权限为何，预设root 都可以存取</li>
+<li>目录类型文件，若没有x（执行）权限则即使有r（读取）权限也无法打开</li>
+</ul>
+<h3 id="修改文件属性权限"><a href="#修改文件属性权限" class="headerlink" title="修改文件属性权限"></a>修改文件属性权限</h3><p>几个相关命令与用法：</p>
+<ul>
+<li><p>改变所属用户组, <code>chgrp</code>：语法规则为<code>chgrp group file</code>即其后跟要修改的用户组和文件名</p>
+</li>
+<li><p>改变文件拥有者<code>chown</code>：语法规则为<code>chown user file</code>，另外有一种用法可以同时修改用户组和文件名，格式为<code>chown user:group file</code></p>
+</li>
+<li><p>修改权限<code>chmod</code>：有两种修改格式</p>
+<ul>
+<li><p>数字类型修改：Linux 文件的基本权限就有九个，分别是owner/group/others 三种身份各有自己read/write/execute 权限，先复习一下刚刚上面提到的数据：文件的权限字符为：<code>-rwxrwxrwx</code>， 这九个权限是三个三个一组的！其中，我们可以使用数字来代表各个权限，各权限的分数对照表如下：<code>r:4 w:2 x:1</code>.每种身份(owner/group/others)各自的三个权限(r/w/x)分数是需要累加的，例如当权限为： [-rwxrwx—] 分数则是：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">owner = rwx = 4+2+1 = 7</span><br><span class="line">group = rwx = 4+2+1 = 7</span><br><span class="line">others= --- = 0+0+0 = 0</span><br></pre></td></tr></table></figure>
+
+<p>所以等一下我们设定权限的变更时，该文件的权限数字就是770 啦！变更权限的指令chmod 的语法是这样的：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@study ~]# chmod [-R] xyz 文件或目录</span><br><span class="line">选项与参数：</span><br><span class="line">xyz : 就是刚刚提到的数字类型的权限属性，为 rwx 属性数值的相加。</span><br><span class="line">-R : 进行递归(recursive)的持续变更，亦即连同次目录下的所有文件都会变更</span><br></pre></td></tr></table></figure>
+
+<p>举例来说，如果要将.bashrc 这个文件所有的权限都设定启用，那么就下达：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@study ~]# ls -al .bashrc</span><br><span class="line">-rw-r--r--. 1 root root 176 Dec 29 2013 .bashrc</span><br><span class="line">[root@study ~]# chmod 777 .bashrc</span><br><span class="line">[root@study ~]# ls -al .bashrc</span><br><span class="line">-rwxrwxrwx. 1 root root 176 Dec 29 2013 .bashrc</span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ul>
+</li>
+</ul>
+<p>  例如，有些文件你不希望被其他人看到，应该将文件的权限设定为如：<code>-rwxr-----</code>，那就令<code>chmod 740 filename</code></p>
+<ul>
+<li><p>符号类型修改：还有一个改变权限的方法呦！从之前的介绍中我们可以发现，基本上就九个权限分别是(1)user(2)group(3)others 三种身份啦！那么我们就可以藉由u, g, o 来代表三种身份的权限！此外， a 则代表all 亦即全部的身份！那么读写的权限就可以写成r, w, x 啰！也就是可以使用底下的方式来看：</p>
+<p><img src="/articles/Linux-1/1567821412211.png" alt="1567821412211"></p>
+</li>
+</ul>
+<p>  来实践一下吧！假如我们要设定一个文件的权限成为<code>-rwxr-xr-x</code>时，基本上就是：<br>      o user (u)：具有可读、可写、可执行的权限；<br>      o group 与others (g/o)：具有可读与执行的权限。</p>
+<p>所以有<br>    <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@study ~]# chmod u=rwx,go=rx .bashrc</span><br><span class="line"># 注意！那个 u=rwx,go=rx 是连在一起的，中间并没有任何空格符！</span><br><span class="line">[root@study ~]# ls -al .bashrc</span><br><span class="line">-rwxr-xr-x. 1 root root 176 Dec 29 2013 .bashrc</span><br></pre></td></tr></table></figure></p>
+<p>那么假如是<code>-rwxr-xr--</code>这样的权限呢？可以使用<code>chmod u=rwx,g=rx,o=r filename</code>来设定。此外，如果我不知道原先的文件属性，而我只想要增加.bashrc 这个文件的每个人均可写入的权限， 那么我就可以使用：<br>    <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">[root@study ~]# ls -al .bashrc</span><br><span class="line">-rwxr-xr-x. 1 root root 176 Dec 29 2013 .bashrc</span><br><span class="line">[root@study ~]# chmod a+w .bashrc</span><br><span class="line">[root@study ~]# ls -al .bashrc</span><br><span class="line">-rwxrwxrwx. 1 root root 176 Dec 29 2013 .bashrc</span><br></pre></td></tr></table></figure></p>
+<p>而如果是要将权限去掉而不更动其他已存在的权限呢？例如要拿掉全部人的可执行权限，则:<br>    <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@study ~]# chmod a-x .bashrc</span><br><span class="line">[root@study ~]# ls -al .bashrc</span><br><span class="line">-rw-rw-rw-. 1 root root 176 Dec 29 2013 .bashrc</span><br><span class="line">[root@study ~]# chmod 644 .bashrc # 测试完毕得要改回来</span><br></pre></td></tr></table></figure></p>
+<h3 id="目录与文件的权限意义"><a href="#目录与文件的权限意义" class="headerlink" title="目录与文件的权限意义"></a>目录与文件的权限意义</h3><h4 id="权限对文件的重要性"><a href="#权限对文件的重要性" class="headerlink" title="权限对文件的重要性"></a>权限对文件的重要性</h4><p>文件是实际含有数据的地方，包括一般文本文件、数据库内容文件、二进制可执行文件(binary program)等等。因此，权限对于文件来说，他的意义是这样的：</p>
+<ul>
+<li><p>r (read)：可读取此一文件的实际内容，如读取文本文件的文字内容等；</p>
+</li>
+<li><p>w (write)：可以编辑、新增或者是修改该文件的内容(但不含删除该文件)；</p>
+</li>
+<li><p>x (eXecute)：该文件具有可以被系统执行的权限。</p>
+</li>
+</ul>
+<p>那个可读(r)代表读取文件内容是还好了解，那么可执行(x)呢？这里你就必须要小心啦！ 因为在Windows 底下一个文件是否具有执行的能力是是由扩展名 来判断的， 例如：.exe, .bat, .com 等等，但是在Linux 底下，我们的文件是否能被执行，则是由是否具有<code>x</code>这个权限来决定的！跟档名是没有绝对的关系的。</p>
+<p>至于最后一个 w 这个权限呢？当你对一个文件具有w 权限时，你可以具有写入/编辑/新增/修改文件的内容的权限， 但并不具备有删除该文件本身的权限！对于文件的rwx 来说， 主要都是针对文件的内容而言，与文件名的存在与否没有关系。因为文件记录的是实际的数据嘛！</p>
+<h4 id="权限对目录的重要性"><a href="#权限对目录的重要性" class="headerlink" title="权限对目录的重要性"></a>权限对目录的重要性</h4><p>文件是存放实际数据的所在，那么目录主要是储存啥玩意啊？目录主要的内容在记录文件名列表，文件名与目录有强烈的关连啦！ 所以如果是针对目录时，那个 r, w, x 对目录是什么意义呢？</p>
+<ul>
+<li><p>r (read contents in directory)：表示具有读取目录结构列表的权限，所以当你具有读取(r)一个目录的权限时，表示你可以查询该目录下的文件名数据。所以你就可以利用ls 这个指令将该目录的内容列表显示出来！</p>
+</li>
+<li><p>w (modify contents of directory)：这个可写入的权限对目录来说，是很了不起的！ 因为他表示你具有异动该目录结构列表的权限，也就是底下这些权限：</p>
+<ul>
+<li><p>建立新的文件与目录；</p>
+</li>
+<li><p>删除已经存在的文件与目录(<strong>不论是否具有操作该文件的权限</strong>)</p>
+<p><font color="blue" face="楷体">注意：即使一个用户对于一个目录下的某个文件没有任何权限，但是只要这个用户有这个目录的w权限，依然可以删除这个目录下的该文件。</font></p>
+</li>
+<li><p>将已存在的文件或目录进行更名；</p>
+</li>
+<li><p>搬移该目录内的文件、目录位置。</p>
+</li>
+</ul>
+<p>总之，目录的w 权限就与该目录底下的文件名异动有关就对了啦！</p>
+</li>
+<li><p>x (access directory)：目录只是记录文件名而已，总不能拿来执行吧？没错！目录不可以被执行，目录的x 代表的是用户能否进入该目录成为工作目录的用途！ 所谓的工作目录(work directory)就是你目前所在的目录啦！举例来说，当你登入Linux 时， 你所在的家目录就是你当下的工作目录。而变换目录的指令是『cd』(change directory)！</p>
+</li>
+</ul>
+<p>我们整理如下：</p>
+<table>
+<thead>
+<tr>
+<th align="center">组件</th>
+<th align="center">r</th>
+<th align="center">w</th>
+<th align="center">x</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">文件</td>
+<td align="center">读文件内容</td>
+<td align="center">修改文件内容</td>
+<td align="center">执行文件内容</td>
+</tr>
+<tr>
+<td align="center">目录</td>
+<td align="center">读文件名</td>
+<td align="center">建立新的文件与目录<br> 删除已经存在的文件与目录(不论该文件的权限为何！) <br>将已存在的文件或目录进行更名<br> 搬移该目录内的文件、目录位置</td>
+<td align="center">进入该目录</td>
+</tr>
+</tbody></table>
+<p>再次强调，能不能进入某个目录，只与这个目录的x权限有关。因此要开放目录给人浏览，至少应该给予r和x权限，但不能随意给予w权限。</p>
+<p>最后我们用一个表格进行整理和总结。假设我现在在系统使用dingzhi这个账号，那么这个账号针对/dir1, /dir1/file1, /dir2 这三个文件名来说，分别需要哪些最小的权限才能达成各项任务？ 需要的权限可以整理成下面的表。通过整理这张表我们可以更好地理解Linux的权限管理。从这个表格也可以看出，要读一个文件时，你得要具有这个文件所在目录的x 权限才行！所以，通常要开放的目录， 至少会具备rx 这两个权限。</p>
+<p><img src="/articles/Linux-1/1568362322609.png" alt="1568362322609"></p>
+<h3 id="Linux文件种类"><a href="#Linux文件种类" class="headerlink" title="Linux文件种类"></a>Linux文件种类</h3><p><font color="blue" face="楷体">首先强调一个概念：一个Linux 文件能不能被执行，与前文述及文件的十个属性(如drwxrwxrwx)有关， 与文件名根本一点关系也没有。这个观念跟Windows 的情况不相同。在Windows 下， 能被执行的文件扩展名通常是.com .exe .bat 等等，而在Linux 下，只要文件的权限有x 的话，例如[ -rwxr-xr-x ] 即代表这个文件具有可以被执行的能力。</font><strong><font color="red" face="楷体">但是，应该指出具有『可执行的权限』以及『具有可执行的程序代码』是两回事！在Linux 下，你可以让一个文本文件，例如text.txt 具有『可执行的权限』(加入x 权限即可)， 但是这个文件明显无法执行，因为他不具备可执行的程序代码！而如果你将cat 这个可以执行的指令的x权限删除，那么cat将无法被执行。也就是说，保证文件被执行需要①可执行的代码②可执行的权限。</font></strong></p>
+<p>虽然Linux文件下没有扩展名，但我们常常为了了解文件内容加上适当的扩展名，常见扩展名如下：</p>
+<ul>
+<li>*.sh ： 脚本或批处理文件(scripts)，因为批处理文件为使用shell 写成的，所以扩展名就编成.sh ；</li>
+<li>*.Z, *.tar, *.tar.gz, *.zip, *.tgz： 经过打包的压缩文件。这是因为压缩软件分别为gunzip, tar 等等的，由于不同的压缩软件，而取其相关的扩展名</li>
+<li>*.html, *.php：网页相关文件，分别代表HTML 语法与PHP 语法的网页文件啰！ .html 的文件可使用网页浏览器来直接开启，至于.php 的文件， 则可以透过client 端的浏览器来server 端浏览，以得到运算后的网页结果。</li>
+</ul>
+<p>所以，当我们在网络上下载一个可执行文件，但是偏偏在自己的Linux 系统中就是无法执行！那么就是可能文件的属性被改变了导致无法执行。</p>
+<h2 id="目录与路径"><a href="#目录与路径" class="headerlink" title="目录与路径"></a>目录与路径</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">#一组特别重要的目录，需要牢记</span><br><span class="line">. 			代表此层目录</span><br><span class="line">.. 			代表上一层目录</span><br><span class="line">- 			代表前一个工作目录</span><br><span class="line">~ 			代表『目前用户身份』所在的家目录</span><br><span class="line">~account 	代表 account 这个用户的家目录(account 是个账号名称)</span><br></pre></td></tr></table></figure>
+
+<p>需要特别注意的是：在所有目录底下都会存在的两个目录，分别是<code>.</code>与<code>..</code>分别代表此层与上层目录的意思。根目录也有上层目录，但根目录的上一层(..)与根目录自己(.)是同一个目录。</p>
+<p>下面是一组常见的处理目录的指令：</p>
+<ul>
+<li><p>cd：变换目录</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">[dingzhi@study ~]$ su - # 先切换身份成为 root 看看！</span><br><span class="line">[root@study ~]# cd [相对路径或绝对路径]</span><br><span class="line"># 最重要的就是目录的绝对路径与相对路径，还有一些特殊目录的符号啰！</span><br><span class="line">[root@study ~]# cd ~dingzhi</span><br><span class="line"># 代表去到 dingzhi 这个用户的家目录，亦即 /home/dingzhi</span><br><span class="line">[root@study dingzhi]# cd ~</span><br><span class="line"># 表示回到自己的家目录，亦即是 /root 这个目录</span><br><span class="line">[root@study ~]# cd</span><br><span class="line"># 没有加上任何路径，也还是代表回到自己家目录的意思喔！</span><br><span class="line">[root@study ~]# cd ..</span><br><span class="line"># 表示去到目前的上层目录，亦即是 /root 的上层目录的意思；</span><br><span class="line">[root@study /]# cd -</span><br><span class="line"># 表示回到刚刚的那个目录，也就是 /root 啰～</span><br><span class="line">[root@study ~]# cd /var/spool/mail</span><br><span class="line"># 这个就是绝对路径的写法！直接指定要去的完整路径名称！</span><br><span class="line">[root@study mail]# cd ../postfix</span><br><span class="line"># 这个是相对路径的写法，我们由/var/spool/mail 去到/var/spool/postfix 就这样写！</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>仅输入cd 时，代表的就是<code>cd ~</code>的意思</li>
+<li>在Linux下的默认命令行中存在文件补齐功能，可以利用Tab键不全目录路径</li>
+</ul>
+</li>
+<li><p>pwd：显示当前目录</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">[root@study ~]# pwd [-P]</span><br><span class="line">选项与参数：</span><br><span class="line">-P ：显示出确实的路径，而非使用链接 (link) 路径。</span><br><span class="line">范例：单纯显示出目前的工作目录：</span><br><span class="line">[root@study ~]# pwd</span><br><span class="line">/root &lt;== 显示出目录啦～</span><br><span class="line">范例：显示出实际的工作目录，而非链接文件本身的目录名而已</span><br><span class="line">[root@study ~]# cd /var/mail &lt;==注意，/var/mail 是一个链接文件</span><br><span class="line">[root@study mail]# pwd</span><br><span class="line">/var/mail &lt;==列出目前的工作目录</span><br><span class="line">[root@study mail]# pwd -P</span><br><span class="line">/var/spool/mail &lt;==怎么回事？有没有加 -P 差很多～</span><br><span class="line">[root@study mail]# ls -ld /var/mail</span><br><span class="line">lrwxrwxrwx. 1 root root 10 May 4 17:51 /var/mail -&gt; spool/mail</span><br><span class="line"># 看到这里应该知道为啥了吧？因为 /var/mail 是链接文件，链接到 /var/spool/mail</span><br><span class="line"># 所以，加上 pwd -P 的选项后，会不以连结文件的数据显示，而是显示正确的完整路径</span><br></pre></td></tr></table></figure>
+
+<p>其实有趣的是那个 -P 的选项啦！他可以让我们取得正确的目录名称，而不是以链接文件的路径来显示</p>
+</li>
+<li><p>mkdir：建立一个新的目录</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">[root@study ~]# mkdir [-mp] 目录名称</span><br><span class="line">选项与参数：</span><br><span class="line">-m ：配置文件案的权限喔！直接设定，不需要看预设权限 (umask) 的脸色～</span><br><span class="line">-p ：帮助你直接将所需要的目录(包含上层目录)递归建立起来！</span><br><span class="line">范例：请到/tmp 底下尝试建立数个新目录看看：</span><br><span class="line">[root@study ~]# cd /tmp</span><br><span class="line">[root@study tmp]# mkdir test &lt;==建立一名为 test 的新目录</span><br><span class="line">[root@study tmp]# mkdir test1/test2/test3/test4</span><br><span class="line">mkdir: cannot create directory ‘test1/test2/test3/test4’: No such file or directory</span><br><span class="line"># 话说，系统告诉我们，没可能建立这个目录啊！就是没有目录才要建立的！见鬼嘛？</span><br><span class="line">[root@study tmp]# mkdir -p test1/test2/test3/test4</span><br><span class="line"># 原来是要建 test4 上层没先建 test3 之故！加了这个 -p 的选项，可以自行帮你建立多层目录！</span><br><span class="line">范例：建立权限为rwx--x--x 的目录</span><br><span class="line">[root@study tmp]# mkdir -m 711 test2</span><br><span class="line">[root@study tmp]# ls -ld test*</span><br><span class="line">drwxr-xr-x. 2 root root 6 Jun 4 19:03 test</span><br><span class="line">drwxr-xr-x. 3 root root 18 Jun 4 19:04 test1</span><br><span class="line">drwx--x--x. 2 root root 6 Jun 4 19:05 test2</span><br><span class="line"># 仔细看上面的权限部分，如果没有加上 -m 来强制设定属性，系统会使用默认属性。</span><br><span class="line"># 那么你的默认属性为何？这要透过底下介绍的 umask 才能了解</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><font color="blue" face="楷体">注意 -p 参数的用法</font></li>
+<li>在不使用-m参数创建新目录时，新目录的权限与<code>umask</code>有关</li>
+</ul>
+</li>
+<li><p>rmdir：删除一个空的目录</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">[root@study ~]# rmdir [-p] 目录名称</span><br><span class="line">选项与参数：</span><br><span class="line">-p ：连同『上层』『空的』目录也一起删除</span><br><span class="line">范例：将于mkdir 范例中建立的目录(/tmp 底下)删除掉！</span><br><span class="line">[root@study tmp]# ls -ld test* &lt;==看看有多少目录存在？</span><br><span class="line">drwxr-xr-x. 2 root root 6 Jun 4 19:03 test</span><br><span class="line">drwxr-xr-x. 3 root root 18 Jun 4 19:04 test1</span><br><span class="line">drwx--x--x. 2 root root 6 Jun 4 19:05 test2</span><br><span class="line">[root@study tmp]# rmdir test &lt;==可直接删除掉，没问题</span><br><span class="line">[root@study tmp]# rmdir test1 &lt;==因为尚有内容，所以无法删除！</span><br><span class="line">rmdir: failed to remove ‘test1’: Directory not empty</span><br><span class="line">[root@study tmp]# rmdir -p test1/test2/test3/test4</span><br><span class="line">[root@study tmp]# ls -ld test* &lt;==底下的输出中test 与test1 不见了！</span><br><span class="line">drwx--x--x. 2 root root 6 Jun 4 19:05 test2</span><br><span class="line"># 瞧！利用 -p 这个选项，立刻就可以将 test1/test2/test3/test4 一次删除</span><br><span class="line"># 不过要注意的是，这个 rmdir 仅能删除空的目录</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>如果要删掉目录下所有文件，则需要使用<code>rm -r</code>命令</li>
+</ul>
+</li>
+</ul>
+<p>关于环境变量<code>$PATH</code>：我们可以利用<code>echo $PATH</code>命令查看到底哪些目录被定义出来了(<font color="blue" face="楷体">echo有“显示、印出”的意思，而PATH 前面加的$表示后面接的是变量，所以会显示出目前的PATH。PATH(一定是大写)这个变量的内容是由一堆目录所组成的，每个目录中间用冒号(:)来隔开， 每个目录是有顺序之分的</font>)</p>
+<ul>
+<li><p><strong>一道例题体现Linux与Windows不同的使用逻辑</strong>：假设你是root，如果你将ls 由/bin/ls 移动成为/root/ls(可用<code>mv /bin/ls /root</code>指令达成)，然后你自己本身也在/root目录下， 请问(1)你能不能直接输入ls 来执行？(2)若不能，你该如何执行ls 这个指令？（3)若要直接输入ls 即可执<br>行，又该如何进行？<font color="red" face="楷体">答：(1)接下来不论你在那个目录底下输入任何与ls 相关的指令，都没有办法顺利的执行ls 了！ 也就是说，你不能直接<br>输入ls 来执行，因为/root 这个目录并不在PATH 指定的目录中， 所以，即使你在/root 目录下，也不能够搜寻到ls<br>这个指令！(2)因为这个ls 确实存在于/root 底下，并不是被删除了！所以我们可以透过使用绝对路径或者是相对路径直接指定<br>这个执行文件名， 底下的两个方法都能够执行ls 这个指令：</font></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">[root@study ~]# /root/ls &lt;==直接用绝对路径指定该文件名</span><br><span class="line">[root@study ~]# ./ls &lt;==因为在 /root 目录下，就用./ls 来指定</span><br></pre></td></tr></table></figure>
+
+<p><font color="red" face="楷体">(3)如果想要让root 在任何目录均可执行/root 底下的ls，那么就将/root 加入PATH 当中即可。 加入的方法很简单，可以利用下面的命令.这个作法就能够将/root 加入到执行文件搜寻路径PATH 中了！不相信的话请使用<code>echo $PATH</code>去查看。另外，除了 <code>$PATH</code> 之外，如果想要更明确的定义出变量的名称，可用大括号<code>${PATH}</code> 来处理变量的调用.</font></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">[root@study ~]# PATH=&quot;$&#123;PATH&#125;:/root&quot;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<p>下面是一组与文件/目录管理有关的命令：</p>
+<ul>
+<li><p>文件与目录查看<code>ls</code>：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">[root@study ~]# ls [-aAdfFhilnrRSt] 文件名或目录名称..</span><br><span class="line">[root@study ~]# ls [--color=&#123;never,auto,always&#125;] 文件名或目录名称..</span><br><span class="line">[root@study ~]# ls [--full-time] 文件名或目录名称..</span><br><span class="line">选项与参数：</span><br><span class="line">-a ：全部的文件，连同隐藏档( 开头为 . 的文件) 一起列出来(常用)</span><br><span class="line">-d ：仅列出目录本身，而不是列出目录内的文件数据(常用)</span><br><span class="line">-l ：长数据串行出，包含文件的属性与权限等等数据；(常用)		#注意：ls -l命令可以简写为ll命令.</span><br><span class="line">-A ：全部的文件，连同隐藏档，但不包括 . 与 .. 这两个目录</span><br><span class="line">-f ：直接列出结果，而不进行排序 (ls 预设会以档名排序！)</span><br><span class="line">-F ：根据文件、目录等信息，给予附加数据结构，例如：</span><br><span class="line">*:代表可执行文件； /:代表目录； =:代表 socket 文件； |:代表 FIFO 文件；</span><br><span class="line">-h ：将文件容量以人类较易读的方式(例如 GB, KB 等等)列出来；</span><br><span class="line">-i ：列出 inode 号码，inode 的意义下一章将会介绍；</span><br><span class="line">-n ：列出 UID 与 GID 而非使用者与群组的名称 (UID 与GID 会在账号管理提到！)</span><br><span class="line">-r ：将排序结果反向输出，例如：原本档名由小到大，反向则为由大到小；</span><br><span class="line">-R ：连同子目录内容一起列出来，等于该目录下的所有文件都会显示出来；</span><br><span class="line">-S ：以文件容量大小排序，而不是用档名排序；</span><br><span class="line">-t ：依时间排序，而不是用档名。</span><br><span class="line">--color=never ：不要依据文件特性给予颜色显示；</span><br><span class="line">--color=always ：显示颜色</span><br><span class="line">--color=auto ：让系统自行依据设定来判断是否给予颜色</span><br><span class="line">--full-time ：以完整时间模式 (包含年、月、日、时、分) 输出</span><br><span class="line">--time=&#123;atime,ctime&#125; ：输出 access 时间或改变权限属性时间 (ctime)而非内容变更时间 (modification time)</span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ul>
+<ul>
+<li><p>文件复制命令<code>cp</code>：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">[root@study ~]# cp [-adfilprsu] 来源文件(source) 目标文件(destination)	#注意，这里的目标地址要写成目标文件形式</span><br><span class="line">[root@study ~]# cp [options] source1 source2 source3 .... directory	#注意，如果来源文件有两个以上，则最后一个目的文件一定要是目录才行，不能写成文件形式</span><br><span class="line">选项与参数：</span><br><span class="line">-a ：相当于 -dr --preserve=all 的意思，至于 dr 请参考下列说明(常用)</span><br><span class="line">-i ：若目标文件(destination)已经存在时，在覆盖时会先询问动作的进行(常用)</span><br><span class="line">-p ：连同文件的属性(权限、用户、时间)一起复制过去，而非使用默认属性(常用)</span><br><span class="line">-r ：递归持续复制，用于目录的复制行为(常用)</span><br><span class="line">-l ：进行硬式连结(hard link)的连结文件建立，而非复制文件本身；</span><br><span class="line">-s ：复制成为符号链接文件 (symbolic link)，亦即『快捷方式』文件；</span><br><span class="line">-d ：若来源文件为链接文件的属性(link file)，则复制链接文件属性而非文件本身；若不加入-d格式，则复制链接文件时会把链接文件对应的实际文件进行复制而非复制链接文件.</span><br><span class="line">-f ：为强制(force)的意思，若目标文件已经存在且无法开启，则移除后再尝试一次；</span><br><span class="line">-u ：destination 比 source 旧才更新 destination，或 destination 不存在的情况下才复制。</span><br><span class="line">--preserve=all ：除了 -p 的权限相关参数外，还加入 SELinux 的属性, links, xattr 等也复制了。</span><br></pre></td></tr></table></figure>
+
+
+
+</li>
+</ul>
+<p>cp 的功能很多，由于我们常常会进行一些数据的复制，所以也会常常用到这个指令的。一般来说，我们如果去复制别人的数据(当然，该文件你必须要有read 的权限才行啊！) 时， 总是希望复制到的数据最后是我们自己的，所以，在预设的条件中， cp 的来源文件与目标文件的权限是不同的，目的文件的拥有者通常会是指令操作者本身。由于具有这个特性，因此当我们在进行备份的时候，某些需要特别注意的特殊权限文件， 例如密码文件(/etc/shadow) 以及一些配置文件，就不能直接以cp 来复制，而必须要加上-a 或者是-p 等等可以完整复制文件权限的选项才行！另外，如果你想要复制文件给其他的使用者， 也必须要注意到文件的权限(包含读、写、执行以及文件拥有者等等)， 否则，其他人还是无法针对你给予的文件进行修改。</p>
+<p>  使用-l 及-s 都会建立所谓的连结文件(link file)，但是这两种连结文件却有不一样的情况。这是怎么一回事啊？ 那个 -l 就是所谓的实体链接(hard link)，至于-s 则是符号链接(symboliclink)， 简单来说，符号链接是一个快捷方式，这个快捷方式会连结到原文件去！至于实体链接文件与原文件的属性与权限完全一模一样，与尚未进行连结前的差异则是原文件属性栏的第二栏的link 数由1 变成2了。</p>
+<ul>
+<li><p>文件或目录的删除<code>rm</code>:</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@study ~]# rm [-fir] 文件或目录</span><br><span class="line">选项与参数：</span><br><span class="line">-f ：就是 force 的意思，忽略不存在的文件，不会出现警告讯息；</span><br><span class="line">-i ：互动模式，在删除前会询问使用者是否动作</span><br><span class="line">-r ：递归删除，常用在目录的删除.注意使用rmdir命令只能删掉空目录，使用带有-r格式的rm命令可以删除非空目录.</span><br><span class="line">#注意：一般的系统中使用root用户的rm命令时，会默认自带-i选项，要忽略掉此时默认的-i选项，可以在命令前加反斜线，例如下面的案例</span><br><span class="line">[root@study tmp]# \rm -r /tmp/etc</span><br><span class="line">#这样就能忽视掉系统给root设置的默认-i选项了.</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>移动文件或目录、重命名<code>mv</code>：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@study ~]# mv [-fiu] source destination</span><br><span class="line">[root@study ~]# mv [options] source1 source2 source3 .... directory</span><br><span class="line">选项与参数：</span><br><span class="line">-f ：force 强制的意思，如果目标文件已经存在，不会询问而直接覆盖；</span><br><span class="line">-i ：若目标文件 (destination) 已经存在时，就会询问是否覆盖！</span><br><span class="line">-u ：若目标文件已经存在，且 source 比较新，才会更新 (update)</span><br><span class="line">一个利用mv命令重命名的示例：</span><br><span class="line">[root@study tmp]# mv mvtest mvtest2 &lt;== 这样就更名mvtest为mvtest2.</span><br><span class="line"># 其实在 Linux 底下还有个有趣的指令，名称为 rename ，能利用正则表达式对多个文件同时更名。</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>获取文件名与目录名<code>basename</code>与<code>dirname</code>：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@study ~]# basename /etc/sysconfig/network</span><br><span class="line">network &lt;== 很简单！就取得最后的档名～</span><br><span class="line">[root@study ~]# dirname /etc/sysconfig/network</span><br><span class="line">/etc/sysconfig &lt;== 取得的变成目录名了！</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>文件内容的直接查看</p>
+<ul>
+<li>从第一行开始显示文件内容<code>cat</code>：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">[root@study ~]# cat [-AbEnTv]</span><br><span class="line">选项与参数：</span><br><span class="line">-A ：相当于 -vET 的整合选项，可列出一些特殊字符而不是空白而已；</span><br><span class="line">-b ：列出行号，仅针对非空白行做行号显示，空白行不标行号！</span><br><span class="line">-E ：将结尾的断行字符 $ 显示出来；</span><br><span class="line">-n ：打印出行号，连同空白行也会有行号，与 -b 的选项不同；</span><br><span class="line">-T ：将 [tab] 按键以 ^I 显示出来；</span><br><span class="line">-v ：列出一些看不出来的特殊字符</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>从最后一行开始显示文件内容<code>tac</code></li>
+<li>添加行号打印<code>nl</code>：</li>
+</ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">[root@study ~]# nl [-bnw] 文件</span><br><span class="line">选项与参数：</span><br><span class="line">-b ：指定行号指定的方式，主要有两种：</span><br><span class="line">	-b a ：表示不论是否为空行，也同样列出行号(类似 cat -n)；</span><br><span class="line">	-b t ：如果有空行，空的那一行不要列出行号(默认值)；</span><br><span class="line">-n ：列出行号表示的方法，主要有三种：</span><br><span class="line">	-n ln ：行号在屏幕的最左方显示；</span><br><span class="line">	-n rn ：行号在自己字段的最右方显示，且不加 0 ；</span><br><span class="line">	-n rz ：行号在自己字段的最右方显示，且加 0 ；</span><br><span class="line">-w ：行号字段的占用的字符数。例如要行号占3位，可以输入-w 3 格式.</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>文件内容的可翻页查看</p>
+<ul>
+<li><p><code>more</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">#在more 这个程序的运作过程中，你有几个按键可以按的：</span><br><span class="line">空格键 (space)：代表向下翻一页；</span><br><span class="line">Enter ：代表向下翻『一行』；</span><br><span class="line">/字符串 ：代表在这个显示的内容当中，向下搜寻『字符串』这个关键词；</span><br><span class="line">:f ：立刻显示出文件名以及目前显示的行数；</span><br><span class="line">q ：代表立刻离开 more ，不再显示该文件内容。</span><br><span class="line">b 或 [ctrl]-b ：代表往回翻页，不过这动作只对文件有用，对管道无用。</span><br><span class="line">q：离开more命令</span><br></pre></td></tr></table></figure>
+</li>
+<li><p><code>less</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">#在less 这个程序的运作过程中，你有几个按键可以按的：</span><br><span class="line">空格键 ：向下翻动一页；</span><br><span class="line">[pagedown]：向下翻动一页；</span><br><span class="line">[pageup] ：向上翻动一页；</span><br><span class="line">/字符串 ：向下搜寻『字符串』的功能；</span><br><span class="line">?字符串 ：向上搜寻『字符串』的功能；</span><br><span class="line">n ：重复前一个搜寻 (与 / 或 ? 有关！)</span><br><span class="line">N ：反向的重复前一个搜寻 (与 / 或 ? 有关！)</span><br><span class="line">g ：前进到这个资料的第一行去；</span><br><span class="line">G ：前进到这个数据的最后一行去 (注意大小写)；</span><br><span class="line">q ：离开 less 这个程序；</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>显示文件内容时的数据截取</p>
+<ul>
+<li><p>取出前面几行<code>head</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">[root@study ~]# head [-n number] 文件</span><br><span class="line">选项与参数：</span><br><span class="line">-n ：后面接数字，代表显示几行.默认显示10行.-n 选项后面的参数如果是负数（如-x），代表列出不包括最后x行的所有行。</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>取出后面几行<code>tail</code>：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">[root@study ~]# tail [-n number] 文件</span><br><span class="line">选项与参数：</span><br><span class="line">-n ：后面接数字，代表显示几行的意思.默认显示10行.-n 选项后面的参数如果是带正号的正数（如+x），代表列出第x行开始的所有行.</span><br><span class="line">-f ：表示持续侦测后面所接的文件名，要等到按下[ctrl]-c 才会结束tail 的侦测.例如当要监测的文件随时会有数据写入，为了让文件一旦出现数据写入就显示到屏幕上，就可以利用-f选项不断刷新显示待监测文件</span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>思考一下，假如我想要显示<code>/etc/man_db.conf</code> 的第 11 到第 20 行呢？我们可以先取前 20 行，再取后十行，利用<code>head -n 20 /etc/man_db.conf | tail -n 10</code>，这样就可以得到第 11 到第 20 行之间的内容。这两个指令中间有个管道 (|) 的符号存在，这个管道的意思是：前面的指令所输出的讯息，请透过管道交由后续的指令继续使用。 所以， <code>head -n 20 /etc/man_db.conf</code>会将文件内的 20 行取出来，但不输出到屏幕上，而是转交给后续的 <code>tail</code>指令继续处理。 因此 <code>tail</code>不需要接文件名，因为 <code>tail</code> 所需要的数据是来自于 <code>head</code> 处理后的结果.<br>进一步思考，如果我想要列出正确的行号呢？就是屏幕上仅列出 <code>/etc/man_db.conf</code> 的第 11 到第 20 行，且有行号存在？我们不妨透过<code>cat -n</code> 来带出行号，然后再透过 <code>head/tail</code> 来截取数据即可！所以可以通过<code>cat -n /etc/man_db.conf | head -n 20 | tail -n 10</code>实现.</p>
+</blockquote>
+<ul>
+<li><p>非纯文本文件的读取<code>od</code></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[root@study ~]# od [-t TYPE] 文件</span><br><span class="line">选项或参数：</span><br><span class="line">-t ：后面可以接各种『类型 (TYPE)』的输出，例如：</span><br><span class="line">a ：利用默认的字符来输出；</span><br><span class="line">c ：使用 ASCII 字符来输出</span><br><span class="line">d[size] ：利用十进制(decimal)来输出数据，每个整数占用 size bytes ；</span><br><span class="line">f[size] ：利用浮点数(floating)来输出数据，每个数占用 size bytes ；</span><br><span class="line">o[size] ：利用八进制(octal)来输出数据，每个整数占用 size bytes ；</span><br><span class="line">x[size] ：利用十六进制(hexadecimal)来输出数据，每个整数占用 size bytes ；</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>如果我想通过Linux系统知道<code>dingzhi</code>的ASCII码，该如何透过 <code>od</code>命令来判断呢。其实可以透过管道来实现，即<code>echo dingzhi | od -t oCc</code> , 因为<code>echo</code> 可以在屏幕上面显示任何信息，而这个信息不由屏幕输出，而是传给<code>od</code>去继续处理！就可以得到 ASCII code对照了。</p>
+</blockquote>
+</li>
+<li><p>修改文件时间或创建新文件<code>touch</code></p>
+<p>我们在使用Linux中ls命令时，会看到关于文件的三个时间信息——修改时间、状态时间、读取时间。三者含义略有区别,修改时间指文件的内容数据最后一次变更的时间，内容数据指的是文件的内容，而不是文件的属性或权限。相对应的，状态时间指文件的状态（权限与属性等）最后一次改变时的时间，而当文件的内容被取用时，就会更新这个文件的读取时间。文件的时间是很重要的，因为，如果文件的时间误判的话，可能会造成某些程序无法顺利的运作。<strong>利用<code>touch</code>命令可以修改文件的时间信息</strong>。</p>
+<blockquote>
+<p>亲身经历：当你的iPad上的时间错误的时候，也许一些App将不能正常联网（据我分析后猜测是因为应用程序证书在错误的系统时间下会失效，大雾）</p>
+</blockquote>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">[root@study ~]# touch [-acdmt] 文件</span><br><span class="line">选项与参数：</span><br><span class="line">-a ：仅修订 access time；</span><br><span class="line">-c ：仅修改文件的时间，若该文件不存在则不建立新文件；</span><br><span class="line">-d ：后面可以接欲修订的日期而不用目前的日期，也可以使用 --date=&quot;日期或时间&quot;</span><br><span class="line">-m ：仅修改 mtime ；</span><br><span class="line">-t ：后面可以接欲修订的时间而不用目前的时间，格式为[YYYYMMDDhhmm]</span><br><span class="line"># 备注：在预设的状态下，如果 touch 后面有接文件，</span><br><span class="line"># 则该文件的三个时间 (atime/ctime/mtime) 都会更新为目前的时间。</span><br><span class="line"># 若该文件不存在，则会主动的建立一个新的空的文件。</span><br><span class="line"># 注释：touch命令最常出现的两个场景：建立一个空的文件；将某个文件日期修订为目前(mtime 与atime)</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h2 id="要点回顾"><a href="#要点回顾" class="headerlink" title="要点回顾"></a>要点回顾</h2><ul>
+<li>Linux 的每个文件中，可分别给予使用者、群组与其他人三种身份个别的rwx 权限；</li>
+<li>群组最有用的功能之一，就是当你在团队开发资源的时候，且每个账号都可以有多个群组的支持；</li>
+<li>利用ls -l 显示的文件属性中，第一个字段是文件的权限，共有十个位，第一个位是文件类型， 接下来三个<br>为一组共三组，为使用者、群组、其他人的权限，权限有r,w,x 三种；</li>
+<li>如果档名之前多一个<code>.</code>，则代表这个文件为隐藏文件；</li>
+<li>若需要root 的权限时，可以使用su - 这个指令来切换身份。处理完毕则使用exit 离开su 的指令环境。</li>
+<li>更改文件的群组支持可用chgrp，修改文件的拥有者可用chown，修改文件的权限可用chmod</li>
+<li>chmod 修改权限的方法有两种，分别是符号法与数字法，数字法中r,w,x 分数为4,2,1；</li>
+<li>对文件来讲，权限的效能为：<ul>
+<li>r：可读取此一文件的实际内容，如读取文本文件的文字内容等；</li>
+<li>w：可以编辑、新增或者是修改该文件的内容(但不含删除该文件)；</li>
+<li>x：该文件具有可以被系统执行的权限。</li>
+</ul>
+</li>
+<li>对目录来说，权限的效能为：<ul>
+<li>r (read contents in directory)</li>
+<li>w (modify contents of directory)</li>
+<li>x (access directory)</li>
+</ul>
+</li>
+<li>要开放目录给任何人浏览时，应该至少也要给予r 及x 的权限，但w 权限不可随便给；</li>
+<li>能否读取到某个文件内容，跟该文件所在的目录权限也有关系(目录至少需要有x 的权限)。</li>
+<li>Linux 档名的限制为：单一文件或目录的最大容许文件名为255 个英文字符或128 个汉字字符；</li>
+<li>绝对路径文件名为从根目录/ 开始写起，否则都是相对路径的文件名。一般在写脚本（如shell脚本）来管理系统时，我们更倾向于选择绝对路径。因为绝对路径的写法虽然比较麻烦，但是可以肯定这个写法绝对不会有问题。如果使用相对路径在程序当中，则可能由于你执行的工作环境不同，导致一些问题的发生。</li>
+</ul>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Ding Zhi</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://dingzhi.ga/articles/Linux-1/">http://dingzhi.ga/articles/Linux-1/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Attribution-NonCommercial-NoDerivs 3.0 Unported <a href="https://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh" rel="external nofollow">(CC BY-NC-ND 3.0)</a></span>
+                    </p>
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/Linux/"># Linux</a>
+                    
+                        <a href="/tags/操作系统/"># 操作系统</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/articles/network-1/">计算机网络学习笔记(一)——计算机网络概述</a>
+            
+            
+            <a class="next" rel="next" href="/articles/regex-2/">小白的正则表达式学习之路——Python之re库篇</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+
+        </div>
+        <footer id="footer" class="footer">
+    <title>打赏</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!--<script type="text/javascript" src="http://static.tctip.com/tctip-1.0.2.js"></script>-->
+<script type="text/javascript" src="http://dingzhi.ga/js/tctip-1.0.3.min.js"></script>
+<script>
+  new tctip({
+    top: '20%',
+    button: {
+      id: 9,
+      type: 'dashang'
+    },
+    list: [
+      {
+        type: 'alipay',
+        qrImg: 'http://dingzhi.ga/images/alipay.jpg'
+      }, {
+        type: 'wechat',
+        qrImg: 'http://dingzhi.ga/images/wechat.jpg'
+      }
+    ]
+  }).init()
+</script>
+友情链接<span lang="EN-US"> | <a href="http://fenghe.us/" target="_blank">Fenghe's
+Blog |</a>
+<a href="http://www.kamzero.cn" target="_blank">Sherry's
+Blog |</a>
+<span>© Ding Zhi 2019 | All Rights Reserved</span>
+</span></footer>
+    </div>
+</body>
+</html>

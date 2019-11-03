@@ -1,0 +1,385 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="description" content="Keep learning.">
+
+
+    <meta name="keywords" content="Python,Distributed Computing,AI">
+
+
+<title>汇编语言学习笔记（一）| 基础知识 | DingZhi&#39;s Blog</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">DingZhi&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">DingZhi&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?3c2cb6a51b306a50c53ae432e39de395";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">汇编语言学习笔记（一）| 基础知识</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Ding Zhi</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">August 5, 2019&nbsp;&nbsp;5:30:51</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/汇编语言程序设计/">汇编语言程序设计</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h2 id="求补码"><a href="#求补码" class="headerlink" title="求补码"></a>求补码</h2><h3 id="正数"><a href="#正数" class="headerlink" title="正数"></a>正数</h3><p>正整数的补码是其二进制表示，与原码相同 。<br>【例1】+9的补码是00001001。（备注：这个+9的补码是用8位2进制来表示的，补码表示方式很多，还有16位二进制补码表示形式，以及32位二进制补码表示形式,64位进制补码表示形式等。每一种补码表示形式都只能表示有限的数字。）</p>
+<h3 id="负数"><a href="#负数" class="headerlink" title="负数"></a>负数</h3><p>求负整数的补码，将其原码除符号位外的所有位取反（0变1，1变0，符号位为1不变）后加1。<br>同一个数字在不同的补码表示形式中是不同的。比如-15的补码，在8位二进制中是11110001，然而在16位二进制补码表示中，就是1111111111110001。以下都使用8位2进制来表示。<br>【例2】求-5的补码。</p>
+<p><strong><font color="red">-5对应正数5 </font></strong>（00000101）→所有位取反（11111010）→加1(11111011)<br>所以-5的补码是11111011。<br>【例3】数0的补码表示是唯一的。<br>[+0]补=[+0]反=[+0]原=00000000<br>[-0]补=11111111+1=00000000</p>
+<h3 id="转化为原码"><a href="#转化为原码" class="headerlink" title="转化为原码"></a>转化为原码</h3><p>已知一个数的补码，求原码的操作其实就是对该补码再求补码：</p>
+<p>⑴如果补码的符号位为“0”，表示是一个正数，其原码就是补码。</p>
+<p>⑵如果补码的符号位为“1”，表示是一个负数，那么求给定的这个补码的补码就是要求的原码。</p>
+<p>【例4】已知一个补码为11111001，则原码是10000111（-7）。</p>
+<p>因为符号位为“1”，表示是一个负数，所以该位不变，仍为“1”。</p>
+<p>其余七位1111001取反后为0000110；</p>
+<p>再加1，所以是10000111。</p>
+<h3 id="补码的绝对值"><a href="#补码的绝对值" class="headerlink" title="补码的绝对值"></a>补码的绝对值</h3><p>补码的绝对值<br>【例5】-65的补码是10111111<br>若直接将10111111转换成十进制，发现结果并不是-65，而是191。<br>事实上，在计算机内，如果是一个二进制数，其最左边的位是1，则我们可以判定它为负数，并且是用补码表示。<br><strong><font color="red">若要得到一个负二进制补码的数值，只要对补码全部取反并加1，就可得到其数值。 </font></strong><br>如：二进制值：10111111（-65的补码）<br>各位取反：01000000<br>加1：01000001（+65）</p>
+<h2 id="进制转换"><a href="#进制转换" class="headerlink" title="进制转换"></a>进制转换</h2><h3 id="与十进制"><a href="#与十进制" class="headerlink" title="与十进制"></a>与十进制</h3><p>（1）二进制转十进制</p>
+<p>方法：“按权展开求和”</p>
+<p>【例】：</p>
+<p> <img src="https://gss1.bdstatic.com/9vo3dSag_xI4khGkpoWK1HF6hhy/baike/s%3D347/sign=33ef79cbc995d143de76e22744f18296/4bed2e738bd4b31cf649017386d6277f9f2ff885.jpg" alt="img"></p>
+<p>规律：个位上的数字的次数是0，十位上的数字的次数是1，……，依次递增，而十分位的数字的次数是-1，百分位上数字的次数是-2，……，依次递减。</p>
+<p>注意：不是任何一个十进制小数都能转换成有限位的二进制数。</p>
+<p>（2）十进制转二进制</p>
+<p>· 十进制整数转二进制数：“除以2取余，逆序排列”（除二取余法）</p>
+<p>【例】：</p>
+<p> <img src="https://gss3.bdstatic.com/-Po3dSag_xI4khGkpoWK1HF6hhy/baike/s%3D142/sign=8d76a90f9152982201333dc7e5cb7b3b/0dd7912397dda1446661f97ab3b7d0a20df4868a.jpg" alt="img"></p>
+<p>89÷2 ……1</p>
+<p>44÷2 ……0</p>
+<p>22÷2 ……0</p>
+<p>11÷2 ……1</p>
+<p>5÷2 ……1</p>
+<p>2÷2 ……0</p>
+<p>1</p>
+<h2 id="零位扩展和符号位扩展"><a href="#零位扩展和符号位扩展" class="headerlink" title="零位扩展和符号位扩展"></a>零位扩展和符号位扩展</h2><h3 id="符号扩展"><a href="#符号扩展" class="headerlink" title="符号扩展"></a>符号扩展</h3><p><strong>当用更多的内存存储某一个有符号数时</strong>，由于符号位位于该数的第一位，扩展之后，符号位仍然需要位于第一位，所以，当扩展一个负数的时候需要将扩展的高位全赋为1；对于正数而言，符号扩展和零扩展是一样的，因为符号位就是0。</p>
+<p>比如一个用一个8位二进制表示-1，则是10000001</p>
+<p>如果把这个书用16位二进制表示时，则为11111111 10000001 高位全都是1，这个叫做符号扩展，主要用于对其操作数。</p>
+<h3 id="零扩展就是全补零"><a href="#零扩展就是全补零" class="headerlink" title="零扩展就是全补零"></a><strong>零扩展就是全补零</strong></h3><p>不论其符号位是多少，高8位全都补0.</p>
+<p>能过上面的定义可以看出在C++中，如果把一个char向一个整形转换的时候，就会存在着这个问题</p>
+<p>如果你想得到一个正数，那么如果一个字符的ASCII码值是小于零的，而直接用(int)c进行强制类型转换，结果是通过符号扩展得到的也为一个负数。要得到正数，一定要用(int)(unsigned char)c;因为unsigned char去除了c的符号位，所以，这样的类型转换后，再用(int)进行转换得到的就是一个正数。</p>
+<h3 id="分析"><a href="#分析" class="headerlink" title="分析"></a>分析</h3><p>从上机的叙述得知，有符号数向其它类型数据转化(如char到int,char到unsigned int)时，进行符号位扩展；无符号数向其它类型转换(如unsigned char到int, long)时，进行零扩展。</p>
+<table>
+<thead>
+<tr>
+<th>char</th>
+<th>short</th>
+<th>符号位扩展</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>char</td>
+<td>unsigned char</td>
+<td>最高位失去符号位意义，变为数据位</td>
+</tr>
+<tr>
+<td>char</td>
+<td>unsigned short</td>
+<td>符号位扩展到short;然后从short转到 unsigned short</td>
+</tr>
+<tr>
+<td>unsigned char</td>
+<td>char</td>
+<td>最高位作为符号位</td>
+</tr>
+<tr>
+<td>unsigned char</td>
+<td>short</td>
+<td>0扩展</td>
+</tr>
+<tr>
+<td>unsigned char</td>
+<td>float</td>
+<td>转换到long; 再从 long 转换到float</td>
+</tr>
+</tbody></table>
+<h3 id="由大数据类型向小数据类型转换时，保留低位字节。"><a href="#由大数据类型向小数据类型转换时，保留低位字节。" class="headerlink" title="由大数据类型向小数据类型转换时，保留低位字节。"></a>由大数据类型向小数据类型转换时，保留低位字节。</h3><table>
+<thead>
+<tr>
+<th>unsigned long</th>
+<th>char</th>
+<th>保留低位字节</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>unsigned long</td>
+<td>short</td>
+<td>保留低位字节</td>
+</tr>
+</tbody></table>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Ding Zhi</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://dingzhi.ga/articles/asm-review-1/">http://dingzhi.ga/articles/asm-review-1/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Attribution-NonCommercial-NoDerivs 3.0 Unported <a href="https://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh" rel="external nofollow">(CC BY-NC-ND 3.0)</a></span>
+                    </p>
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/Assembly/"># Assembly</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/articles/asm-review-2/">汇编语言学习笔记（二）| 指令整理</a>
+            
+            
+            <a class="next" rel="next" href="/articles/oop-review-6/">面向对象程序设计（六）| 模板、异常与命名空间</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+
+        </div>
+        <footer id="footer" class="footer">
+    <title>打赏</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!--<script type="text/javascript" src="http://static.tctip.com/tctip-1.0.2.js"></script>-->
+<script type="text/javascript" src="http://dingzhi.ga/js/tctip-1.0.3.min.js"></script>
+<script>
+  new tctip({
+    top: '20%',
+    button: {
+      id: 9,
+      type: 'dashang'
+    },
+    list: [
+      {
+        type: 'alipay',
+        qrImg: 'http://dingzhi.ga/images/alipay.jpg'
+      }, {
+        type: 'wechat',
+        qrImg: 'http://dingzhi.ga/images/wechat.jpg'
+      }
+    ]
+  }).init()
+</script>
+友情链接<span lang="EN-US"> | <a href="http://fenghe.us/" target="_blank">Fenghe's
+Blog |</a>
+<a href="http://www.kamzero.cn" target="_blank">Sherry's
+Blog |</a>
+<span>© Ding Zhi 2019 | All Rights Reserved</span>
+</span></footer>
+    </div>
+</body>
+</html>

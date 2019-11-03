@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="description" content="Keep learning.">
+
+
+    <meta name="keywords" content="Python,Distributed Computing,AI">
+
+
+<title>面向对象程序设计（四）| 继承和派生 | DingZhi&#39;s Blog</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">DingZhi&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">DingZhi&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?3c2cb6a51b306a50c53ae432e39de395";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">面向对象程序设计（四）| 继承和派生</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Ding Zhi</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">August 5, 2019&nbsp;&nbsp;5:22:37</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/面向对象程序设计/">面向对象程序设计</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h2 id="继承与派生"><a href="#继承与派生" class="headerlink" title="继承与派生"></a>继承与派生</h2><h3 id="书写格式"><a href="#书写格式" class="headerlink" title="书写格式"></a>书写格式</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span>  派生类名:</span>继承方式  基类名 </span><br><span class="line">&#123;</span><br><span class="line">       <span class="comment">//派生类新增的数据成员和成员函数</span></span><br><span class="line">    &#125;;</span><br></pre></td></tr></table></figure>
+
+<h3 id="基类成员在派生类中的访问属性"><a href="#基类成员在派生类中的访问属性" class="headerlink" title="基类成员在派生类中的访问属性"></a><font color="red">基类成员在派生类中的访问属性</font></h3><table>
+<thead>
+<tr>
+<th align="center">基类中访问属性</th>
+<th align="center">继承方式</th>
+<th align="center">派生类中访问属性</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">private</td>
+<td align="center">public</td>
+<td align="center">不可直接访问</td>
+</tr>
+<tr>
+<td align="center">private</td>
+<td align="center">private</td>
+<td align="center">不可直接访问</td>
+</tr>
+<tr>
+<td align="center">private</td>
+<td align="center">protected</td>
+<td align="center">不可直接访问</td>
+</tr>
+<tr>
+<td align="center">public</td>
+<td align="center">public</td>
+<td align="center">public</td>
+</tr>
+<tr>
+<td align="center">public</td>
+<td align="center">private</td>
+<td align="center">private</td>
+</tr>
+<tr>
+<td align="center">public</td>
+<td align="center">protected</td>
+<td align="center">protected</td>
+</tr>
+<tr>
+<td align="center">protected</td>
+<td align="center">public</td>
+<td align="center">protected</td>
+</tr>
+<tr>
+<td align="center">protected</td>
+<td align="center">private</td>
+<td align="center">private</td>
+</tr>
+<tr>
+<td align="center">protected</td>
+<td align="center">protected</td>
+<td align="center">protected</td>
+</tr>
+</tbody></table>
+<p><strong>*<font color="red">inaccessible&gt;private&gt;protected&gt;public</font>*</strong></p>
+<p><em>基类的private成员在私有派生类中是不可直接访问的,所以无论是派生类成员还是通过派生类的对象,都无法直接访问从基类继承来的private成员,但是可以通过基类提供的public成员函数间接访问。</em></p>
+<h3 id="派生类对象当作基类使用"><a href="#派生类对象当作基类使用" class="headerlink" title="派生类对象当作基类使用"></a>派生类对象当作基类使用</h3><ul>
+<li><p>派生的对象可以赋给基类的对象。</p>
+</li>
+<li><p>派生类的对象可以初始化基类的引用</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">derive d;</span><br><span class="line">base &amp;br=d;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>派生类的对象的地址可以赋给指向基类的指针</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">derived d;</span><br><span class="line">base *pb=&amp;d;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>上述三种情形中，在后两种情况下，通过指针或引用只能访问对象d中所继承的基类成员。</p>
+</li>
+</ul>
+<h3 id="多继承"><a href="#多继承" class="headerlink" title="多继承"></a>多继承</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> 派生类名:</span>继承方式<span class="number">1</span>  基类名<span class="number">1</span>,…,继承方式n  基类名n&#123;</span><br><span class="line">      <span class="comment">// 派生类新增的数据成员和成员函数</span></span><br><span class="line"> &#125;;</span><br></pre></td></tr></table></figure>
+
+<p>不写继承方式则默认<em>private</em>继承</p>
+<h3 id="虚基类"><a href="#虚基类" class="headerlink" title="虚基类"></a>虚基类</h3><p>声明：定义派生类时声明</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span>  派生类名:</span><span class="keyword">virtual</span>  继承方式  类名&#123;</span><br><span class="line">    <span class="comment">//…</span></span><br><span class="line">   &#125; </span><br><span class="line"><span class="comment">//下面的写法也可</span></span><br><span class="line"><span class="class"><span class="keyword">class</span>  派生类名:</span>继承方式  <span class="keyword">virtual</span>  类名&#123;</span><br><span class="line">    <span class="comment">//…</span></span><br><span class="line">   &#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="派生类的构造与析构"><a href="#派生类的构造与析构" class="headerlink" title="派生类的构造与析构"></a>派生类的构造与析构</h3><blockquote>
+<p>基类的构造函数和析构函数不能被继承，一般派生类要加入自己的构造函数。</p>
+</blockquote>
+<ul>
+<li><p>派生类含有内嵌对象成员时，构造函数形式：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">派生类名(参数总表):基类名(参数表<span class="number">1</span>),内嵌对象名<span class="number">1</span>(内嵌对象参数表<span class="number">1</span>),…,内嵌对象名n(内嵌对象参数表n)</span><br><span class="line"> &#123;</span><br><span class="line">     <span class="comment">// 派生类新增成员的初始化语句</span></span><br><span class="line">    &#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>在定义派生类对象时,构造函数的执行顺序如下:</p>
+<ul>
+<li>调用基类的构造函数;</li>
+<li>调用内嵌对象成员（子对象类）的构造函数<font color="red">（有多个对象成员时,调用顺序由它们在类中声明的顺序确定）</font>;</li>
+<li>派生类的构造函数体中的内容</li>
+</ul>
+<p><em>撤消对象时,析构函数的调用顺序与构造函数的调用顺序正好相反。</em></p>
+</li>
+</ul>
+</li>
+<li><p>注意：</p>
+<ul>
+<li>当基类构造函数不带参数时，派生类可不定义构造函数，但基类构造函数带有参数，则派生类必须定义构造函数。</li>
+<li>若基类使用缺省构造函数或不带参数的构造函数，则在派生类中定义构造函数时可略去“：基类构造函数名（参数表）”</li>
+<li>基类和派生类的析构函数是各自独立的。</li>
+</ul>
+</li>
+<li><p>多继承的构造函数</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">派生类名(参数总表):基类名<span class="number">1</span>(参数表<span class="number">1</span>),基类名<span class="number">2</span>(参数表<span class="number">2</span>),…,基类名n(参数表n)</span><br><span class="line">    &#123;</span><br><span class="line">           <span class="comment">// 派生类新增成员的初始化语句</span></span><br><span class="line">     &#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>构造函数执行顺序：<em>先执行基类构造函数，再执行对象成员的构造函数，最后执行派生类构造函数。</em><ul>
+<li>处于同一层次各基类构造函数执行顺序，取决于声明派生类时所指定各基类的顺序，与派生类构造函数中所定义的成员初始化列表的各项顺序无关。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>虚基类的初始化</p>
+<ul>
+<li>建立一个对象时,如果这个对象中含有从虚基类继承来的成员,则虚基类的成员是由最远派生类的构造函数通过调用虚基类的构造函数进行初始化的。该派生类的其他基类对虚基类构造函数的调用都自动被忽略。 </li>
+<li>若同一层次中同时包含虚基类和非虚基类,应先调用虚基类的构造函数,再调用非虚基类的构造函数,最后调用派生类构造函数;</li>
+<li>对于多个虚基类,构造函数的执行顺序仍然是先左后右,自上而下;</li>
+<li>C++规定，虚基类子对象是由最派生类的构造函数通过调用虚基类的构造函数进行初始化的。如果一个派生类有一个直接或间接的虚基类，那么派生类的构造函数的成员初始列表中必须列出对虚基类构造函数的调用，如果未被列出，则表示使用该虚基类的缺省构造函数来初始化派生类对象中的虚基类子对象。</li>
+</ul>
+</li>
+</ul>
+<h3 id="赋值兼容原则"><a href="#赋值兼容原则" class="headerlink" title="赋值兼容原则"></a>赋值兼容原则</h3><p>可以把指向派生类对象的指针赋值给指向基类对象的指针。例如:</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">Derived *dptr;</span><br><span class="line">Base *bptr=dptr;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p><em>注意</em></p>
+<ul>
+<li><p><em>声明为指向基类对象的指针可以指向它的公有派生的对象，但不允许指向它的私有派生的对象。</em></p>
+</li>
+<li><p><em>声明为指向基类对象的指针，当其指向公有派生类对象时，只能用它来直接访问派生类中从基类继承来的成员，而不能直接访问公有派生类中定义的成员。</em></p>
+</li>
+<li><p><em>若想访问其公有派生类的特定成员，可以将基类指针用显示类型转换为派生类指针。</em></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span>  <span class="title">A</span> &#123;</span></span><br><span class="line">    <span class="comment">//…</span></span><br><span class="line"><span class="keyword">public</span>：</span><br><span class="line">    <span class="function"><span class="keyword">void</span>  <span class="title">print1</span><span class="params">()</span></span>;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="class"><span class="keyword">class</span>  <span class="title">B</span>：<span class="title">public</span>  <span class="title">A</span> &#123;</span></span><br><span class="line">    <span class="comment">//…</span></span><br><span class="line"><span class="keyword">public</span>：</span><br><span class="line">    print2();</span><br><span class="line">&#125;;</span><br><span class="line"><span class="function"><span class="keyword">void</span>  <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">    A  op1,*ptr;   	<span class="comment">// 定义基类A的对象op1和基类指针ptr</span></span><br><span class="line">    B  op2;        	<span class="comment">// 定义派生类B的对象op2</span></span><br><span class="line">    ptr=&amp;op1;    	<span class="comment">// 将指针ptr指向基类对象op1</span></span><br><span class="line">    ptr-&gt;print1(); 	<span class="comment">// 调用基类函数print1()</span></span><br><span class="line">    ptr=&amp;op2;       	<span class="comment">// 将指针ptr指向派生类对象op2</span></span><br><span class="line">    ptr-&gt;print1();     <span class="comment">// 调用对象op2从其基类继承来的成员函数print1()</span></span><br><span class="line">    ptr-&gt;print2();     <span class="comment">// 错误，基类指针ptr不能访问派生类中定义</span></span><br><span class="line">                                      <span class="comment">//的成员函数print2()</span></span><br><span class="line"><span class="comment">//应当改为：</span></span><br><span class="line">    ((B*)ptr)-&gt; print2();</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Ding Zhi</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://dingzhi.ga/articles/oop-review-4/">http://dingzhi.ga/articles/oop-review-4/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Attribution-NonCommercial-NoDerivs 3.0 Unported <a href="https://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh" rel="external nofollow">(CC BY-NC-ND 3.0)</a></span>
+                    </p>
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/C-C/"># C/C++</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/articles/oop-review-5/">面向对象程序设计（五）| 虚函数、重载</a>
+            
+            
+            <a class="next" rel="next" href="/articles/oop-review-3/">面向对象程序设计（三）| 内联函数、指针、静态成员、友元、对象成员</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+
+        </div>
+        <footer id="footer" class="footer">
+    <title>打赏</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!--<script type="text/javascript" src="http://static.tctip.com/tctip-1.0.2.js"></script>-->
+<script type="text/javascript" src="http://dingzhi.ga/js/tctip-1.0.3.min.js"></script>
+<script>
+  new tctip({
+    top: '20%',
+    button: {
+      id: 9,
+      type: 'dashang'
+    },
+    list: [
+      {
+        type: 'alipay',
+        qrImg: 'http://dingzhi.ga/images/alipay.jpg'
+      }, {
+        type: 'wechat',
+        qrImg: 'http://dingzhi.ga/images/wechat.jpg'
+      }
+    ]
+  }).init()
+</script>
+友情链接<span lang="EN-US"> | <a href="http://fenghe.us/" target="_blank">Fenghe's
+Blog |</a>
+<a href="http://www.kamzero.cn" target="_blank">Sherry's
+Blog |</a>
+<span>© Ding Zhi 2019 | All Rights Reserved</span>
+</span></footer>
+    </div>
+</body>
+</html>

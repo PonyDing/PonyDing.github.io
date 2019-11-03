@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="description" content="Keep learning.">
+
+
+    <meta name="keywords" content="Python,Distributed Computing,AI">
+
+
+<title>汇编语言学习笔记（四）| 一些细节 | DingZhi&#39;s Blog</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">DingZhi&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">DingZhi&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?3c2cb6a51b306a50c53ae432e39de395";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">汇编语言学习笔记（四）| 一些细节</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Ding Zhi</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">August 5, 2019&nbsp;&nbsp;5:32:34</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/汇编语言程序设计/">汇编语言程序设计</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h3 id="call的原理"><a href="#call的原理" class="headerlink" title="call的原理"></a>call的原理</h3><p>先将call后面的一行代码的偏移地址压入堆栈，然后jmp，遇到ret后，pop 堆栈进入ip（32位弹如eip），从而使程序知道跳入哪段代码，从而jmp到后面的代码</p>
+<h3 id="注意引用dw类型数组时的下标"><a href="#注意引用dw类型数组时的下标" class="headerlink" title="注意引用dw类型数组时的下标"></a>注意引用dw类型数组时的下标</h3><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">data segment</span><br><span class="line">abc db 1,2,3,4</span><br><span class="line">xyz dw 789Ah, 0BCDEh</span><br><span class="line">asd dd 12345678h, 56789ABCh; 首元素为asd[0]</span><br><span class="line">                           ; 末元素为asd[4]</span><br><span class="line">data ends</span><br></pre></td></tr></table></figure>
+
+<p>在引用xyz中第二个元素时要注意下标</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">mov ax, xyz[2] ;\编译后变成:</span><br><span class="line">mov ax, [xyz+2];/mov ax, ds:[6]</span><br></pre></td></tr></table></figure>
+
+<h3 id="mov指令不影响任何标志位"><a href="#mov指令不影响任何标志位" class="headerlink" title="mov指令不影响任何标志位"></a>mov指令不影响任何标志位</h3><h3 id="FL和IP寄存器在编程时不能直接引用"><a href="#FL和IP寄存器在编程时不能直接引用" class="headerlink" title="FL和IP寄存器在编程时不能直接引用"></a>FL和IP寄存器在编程时不能直接引用</h3><h3 id="div运算相关"><a href="#div运算相关" class="headerlink" title="div运算相关"></a>div运算相关</h3><p>商默认放在al中，余数默认放在ah中，也就是说在除法运算中，被除数会被损坏</p>
+<h3 id="堆栈入栈和出栈时的动作先后顺序"><a href="#堆栈入栈和出栈时的动作先后顺序" class="headerlink" title="堆栈入栈和出栈时的动作先后顺序"></a>堆栈入栈和出栈时的动作先后顺序</h3><h4 id="入栈"><a href="#入栈" class="headerlink" title="入栈"></a>入栈</h4><p>先sp减小2，再把push后面的数值保存到ss:sp指示的地方</p>
+<h4 id="出栈"><a href="#出栈" class="headerlink" title="出栈"></a>出栈</h4><p>先取出ss:sp中内容，再sp加2恢复</p>
+<h4 id="关于堆栈"><a href="#关于堆栈" class="headerlink" title="关于堆栈"></a>关于堆栈</h4><blockquote>
+<p>注意入栈sp是减而不是加！</p>
+<p>注意push和pop只能对16位字和32位双字操作，不能对8位字节进行操作</p>
+</blockquote>
+<h3 id="两组段地址应用"><a href="#两组段地址应用" class="headerlink" title="两组段地址应用"></a>两组段地址应用</h3><p>cs:ip 指向当前要执行的命令</p>
+<p>ss:sp 指向堆栈顶端</p>
+<h3 id="32位汇编相关"><a href="#32位汇编相关" class="headerlink" title="32位汇编相关"></a>32位汇编相关</h3><ul>
+<li>32位汇编中，[]中有ebp和esp时，段地址为ss，否则段地址为ds</li>
+<li>32位比16位多了以下这种寻址方式：[寄存器+寄存器*n+常数]（其中n=2、4、8）</li>
+<li>32位汇编对[]中寄存器不做限制，但是段寄存器，ip寄存器，fl寄存器不能放在方括号中</li>
+<li>32位汇编起允许push一个常数</li>
+</ul>
+<h3 id="参数传递时的堆栈传递"><a href="#参数传递时的堆栈传递" class="headerlink" title="参数传递时的堆栈传递"></a>参数传递时的堆栈传递</h3>
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Ding Zhi</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://dingzhi.ga/articles/asm-review-4/">http://dingzhi.ga/articles/asm-review-4/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Attribution-NonCommercial-NoDerivs 3.0 Unported <a href="https://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh" rel="external nofollow">(CC BY-NC-ND 3.0)</a></span>
+                    </p>
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/Assembly/"># Assembly</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/articles/leetcode-1/">LeetCode刷题（一） | Two Pointers</a>
+            
+            
+            <a class="next" rel="next" href="/articles/asm-review-3/">汇编语言学习笔记（三）| 六个重要寄存器</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+
+        </div>
+        <footer id="footer" class="footer">
+    <title>打赏</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!--<script type="text/javascript" src="http://static.tctip.com/tctip-1.0.2.js"></script>-->
+<script type="text/javascript" src="http://dingzhi.ga/js/tctip-1.0.3.min.js"></script>
+<script>
+  new tctip({
+    top: '20%',
+    button: {
+      id: 9,
+      type: 'dashang'
+    },
+    list: [
+      {
+        type: 'alipay',
+        qrImg: 'http://dingzhi.ga/images/alipay.jpg'
+      }, {
+        type: 'wechat',
+        qrImg: 'http://dingzhi.ga/images/wechat.jpg'
+      }
+    ]
+  }).init()
+</script>
+友情链接<span lang="EN-US"> | <a href="http://fenghe.us/" target="_blank">Fenghe's
+Blog |</a>
+<a href="http://www.kamzero.cn" target="_blank">Sherry's
+Blog |</a>
+<span>© Ding Zhi 2019 | All Rights Reserved</span>
+</span></footer>
+    </div>
+</body>
+</html>

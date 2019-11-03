@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="description" content="Keep learning.">
+
+
+    <meta name="keywords" content="Python,Distributed Computing,AI">
+
+
+<title>网络爬虫学习笔记（二）| 欧冠2018/2019射手榜爬取 | DingZhi&#39;s Blog</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">DingZhi&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">DingZhi&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?3c2cb6a51b306a50c53ae432e39de395";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">网络爬虫学习笔记（二）| 欧冠2018/2019射手榜爬取</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Ding Zhi</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">September 26, 2019&nbsp;&nbsp;16:30:29</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/Python/">Python</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>这次博文记录的是我之前练习爬虫时做的一个轻量级爬虫项目——对足球赛事射手榜的爬取，使用了一些最基本的爬虫技巧，此外鉴于这个案例爬取工程量很小，另外出于练习正则表达式的考虑，我将不使用现成的解析库，而是用正则表达式进行网页代码解析。</p>
+<h2 id="抓取分析"><a href="#抓取分析" class="headerlink" title="抓取分析"></a>抓取分析</h2><p>我们需要对多个页面进行抓取，以欧冠比赛为例，我们需要抓取的站点为<a href="https://data.huanhuba.com/ucl/goals-410-1-37521-p1/" target="_blank" rel="noopener">https://data.huanhuba.com/ucl/goals-410-1-37521-p1/</a>    ，打开之后可以看到详细榜单信息，如下图所示。</p>
+<p><img src="/articles/crawler-2/1569479759923.png" alt="1569479759923"></p>
+<p>页面中显示的有效信息有球员姓名，排名，球队，位置，出场次数，进球数，点球数和平均进球时间等信息。</p>
+<p>观察网页的网址，当翻页时网址中的’p1’依次变为’p2’、’p3’等，这意味着我们找到了网址的命名规律——即表达页数时是用字母”p”后接页数实现的，这一规律在接下来爬虫设计过程中将会起到一定用处。</p>
+<h2 id="抓取射手榜首页"><a href="#抓取射手榜首页" class="headerlink" title="抓取射手榜首页"></a>抓取射手榜首页</h2><p>接下来首先用代码实现抓取过程，首先我们抓取欧冠联赛射手榜。我们实现了<code>get_one_page()</code>方法，并给他传入url参数，然后将抓取结果返回，再通过<code>main()</code>方法调用，初步代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_one_page</span><span class="params">(url)</span>:</span></span><br><span class="line">    <span class="comment"># 添加头信息</span></span><br><span class="line">    headers = &#123;<span class="string">'User-Agent'</span>: <span class="string">'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 UBrowser/6.2.3964.2 Safari/537.36'</span>&#125;</span><br><span class="line">    html = requests.get(url, headers=headers)</span><br><span class="line">    <span class="keyword">if</span> html.status_code == <span class="number">200</span>:</span><br><span class="line">        <span class="keyword">return</span> html.text</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span><span class="params">()</span>:</span></span><br><span class="line">    url = <span class="string">'https://data.huanhuba.com/ucl/goals-410-1-37521-p1/'</span></span><br><span class="line">    html = get_one_page(url)</span><br><span class="line">    print(html)</span><br><span class="line">main()</span><br></pre></td></tr></table></figure>
+
+<p>这样运行之后，就能得到欧冠联赛射手榜页面的源代码了，获取源代码后，就要解析页面，提取出我们想要的信息。</p>
+<h2 id="正则提取信息"><a href="#正则提取信息" class="headerlink" title="正则提取信息"></a>正则提取信息</h2><p>接下来，回到网页看一下页面的真实源码，在开发者模式下的Network监听组件中查看源代码，如下图所示。</p>
+<p><img src="/articles/crawler-2/1569479931100.png" alt="1569479931100"></p>
+<p>注意：这里不要在Elements选项卡中直接查看源代码，因为那里的源码可能经过JavaScript操作而与原始请求不同，而是需要从Network选项卡部分查看原始请求得到的源码。</p>
+<p>查看其中一个条目的源代码，如下图所示。</p>
+<p><img src="/articles/crawler-2/1569480014119.png" alt="1569480014119"></p>
+<p>可以看到，一个球员数据信息对应的源代码是一个tr节点，我们用正则表达式来提去这里面的一些数据信息。首先需要提取球员的排名信息，而排名信息是在class为<code>td32 num colorgray9</code>的<code>td</code>节点内这里利用费贪婪匹配来提取td节点内的信息，正则表达式写为<code>&lt;tr&gt;.*?td32 num colorgray9&quot;&gt;(.*?)&lt;/td&gt;</code></p>
+<p>随后需要提取球员姓名与其他数据信息。可以看到后面有两个td节点，td节点内部有a节点，经过检查后发现，这两个a节点里就有球员姓名和所属球队信息，因此正则表达式可以改写如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;tr&gt;.*?td32 num colorgray9&quot;&gt;(.*?)&lt;/td&gt;*?colorgray3.*?&gt;(.*?)&lt;/a&gt;*?linka.*?&gt;(.*?)&lt;/a&gt;</span><br></pre></td></tr></table></figure>
+
+<p>再往后，需要提取球员的位置，出场次数，进球数，点球数和平均进球时间等信息，这些数据在更靠后的td节点里，可以用<code>colorgray9</code>为标志位，进一步提取信息，此时正则表达式可以修改为</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;tr&gt;.*?td32 num colorgray9&quot;&gt;(.*?)&lt;/td&gt;*?colorgray3.*?&gt;(.*?)&lt;/a&gt;.*?linka.*?&gt;(.*?)&lt;/a&gt;.*?colorgray9&quot;&gt;(.*?)&lt;/td&gt;.*?colorgray9&quot;&gt;(.*?)&lt;/td&gt;.*?fnt600&quot;&gt;(.*?)&lt;/td&gt;.*?colorgray9&quot;&gt;(.*?)&lt;/td&gt;.*?colorgray9&quot;&gt;(.*?)&lt;/td&gt;</span><br></pre></td></tr></table></figure>
+
+<p>这样一个正则表达式可以匹配出一个球员的信息，里面包含了球员的7个信息，接下来通过调用<code>findall()</code>方法提取所有的内容。</p>
+<p>接下来，我们再定义解析页面的方法<code>parse_one_page()</code>，主要是通过正则表达式来从结果中提取出我们想要的内容，实现代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">parse_one_page</span><span class="params">(html)</span>:</span></span><br><span class="line">    pattern = re.compile(<span class="string">'&lt;tr&gt;.*?td32 num colorgray9"&gt;(.*?)&lt;/td&gt;*?colorgray3.*?&gt;(.*?)&lt;/a&gt;.*?linka.*?&gt;(.*?)&lt;/a&gt;.*?colorgray9"&gt;(.*?)&lt;/td&gt;.*?colorgray9"&gt;(.*?)&lt;/td&gt;.*?fnt600"&gt;(.*?)&lt;/td&gt;.*?colorgray9"&gt;(.*?)&lt;/td&gt;.*?colorgray9"&gt;(.*?)&lt;/td&gt;'</span>, re.S)</span><br><span class="line">    items = re.findall(pattern, html)</span><br><span class="line">    print(items)</span><br></pre></td></tr></table></figure>
+
+<p>但是这样还不够，数据比较杂乱，我们将匹配结果再处理一下，遍历结果并生成字典，此时方法改写如下</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">parse_one_page</span><span class="params">(html)</span>:</span></span><br><span class="line">    pattern = re.compile(<span class="string">'&lt;tr&gt;.*?num .*?&gt;(.*?)&lt;/td&gt;.*?colorgray3.*?&gt;(.*?)&lt;/a&gt;.*?linka.*?&gt;(.*?)&lt;/a&gt;.*?colorgray9"&gt;(.*?)&lt;/td&gt;.*?colorgray9"&gt;(.*?)&lt;/td&gt;.*?fnt600"&gt;(.*?)&lt;/td&gt;.*?colorgray9"&gt;(.*?)&lt;/td&gt;.*?colorgray9"&gt;(.*?)&lt;/td&gt;.*?&lt;/tr&gt;'</span>, re.S)</span><br><span class="line">    items = re.findall(pattern, html)</span><br><span class="line">    <span class="keyword">for</span> item <span class="keyword">in</span> items:</span><br><span class="line">        <span class="keyword">yield</span> &#123;</span><br><span class="line">            <span class="string">'index'</span>: item[<span class="number">0</span>],</span><br><span class="line">            <span class="string">'name'</span>: item[<span class="number">1</span>],</span><br><span class="line">            <span class="string">'team'</span>: item[<span class="number">2</span>],</span><br><span class="line">            <span class="string">'position'</span>: item[<span class="number">3</span>],</span><br><span class="line">            <span class="string">'appearanceNumber'</span>: item[<span class="number">4</span>],</span><br><span class="line">            <span class="string">'goals'</span>: item[<span class="number">5</span>],</span><br><span class="line">            <span class="string">'penalty'</span>: item[<span class="number">6</span>],</span><br><span class="line">            <span class="string">'averageGoalTime'</span>: item[<span class="number">7</span>]</span><br><span class="line">        &#125;</span><br></pre></td></tr></table></figure>
+
+<p>到此为止，我们就成功提取了单页的球员信息。</p>
+<h2 id="写入文件"><a href="#写入文件" class="headerlink" title="写入文件"></a>写入文件</h2><p>最后，我们将提取的结果写入文件，这里直接写入到一个文本文件中，通过接送库的dumps()方法实现字典的序列化，并指定<code>ensure_ascii</code>参数为False，这样可以保证输出结果是中文形式而不是Unicode编码，代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">write_to_file</span><span class="params">(content)</span>:</span></span><br><span class="line">    <span class="keyword">with</span> open(<span class="string">'result.txt'</span>, <span class="string">'a'</span>, encoding=<span class="string">'utf-8'</span>) <span class="keyword">as</span> f:</span><br><span class="line">        f.write(json.dumps(content, ensure_ascii=<span class="literal">False</span>) + <span class="string">'\n'</span>)</span><br></pre></td></tr></table></figure>
+
+<p>通过这个方法可以实现将字典写入文本文件，这个content参数就是一个球员的提取结果，是一个字典。</p>
+<h2 id="整合代码"><a href="#整合代码" class="headerlink" title="整合代码"></a>整合代码</h2><p>最后，实现main()方法来调用前面的方法，将单页球员数据写入文件，相关代码如下</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span><span class="params">(dataPage)</span>:</span></span><br><span class="line">    url = <span class="string">'https://data.huanhuba.com/ucl/goals-410-1-37521-p'</span> + str(dataPage) + <span class="string">'/'</span></span><br><span class="line">    html = get_one_page(url)</span><br><span class="line">    <span class="keyword">for</span> item <span class="keyword">in</span> parse_one_page(html):</span><br><span class="line">        print(item)</span><br><span class="line">        write_to_file(item)</span><br></pre></td></tr></table></figure>
+
+<p>到此为止，我们就实现了欧冠球员射手榜的爬取。</p>
+<h2 id="分页爬取"><a href="#分页爬取" class="headerlink" title="分页爬取"></a>分页爬取</h2><p>因为我们的目标是从第一页抓取到第十六页（最后一页），所以还需要给链接传入一个新的参数来表示不同的足球赛事，此时添加如下调用即可：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    <span class="keyword">for</span> dataPage <span class="keyword">in</span> range(<span class="number">1</span>,<span class="number">17</span>):</span><br><span class="line">        main(dataPage)</span><br></pre></td></tr></table></figure>
+
+<p>到此为止，我们的球赛射手榜爬虫就全部完成了，再稍微整理一下，完整的代码如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># encoding:utf-8</span></span><br><span class="line"><span class="keyword">import</span> json</span><br><span class="line"><span class="keyword">import</span> requests</span><br><span class="line"><span class="keyword">from</span> requests.exceptions <span class="keyword">import</span> RequestException</span><br><span class="line"><span class="keyword">import</span> re</span><br><span class="line"><span class="keyword">import</span> time</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">get_one_page</span><span class="params">(url)</span>:</span></span><br><span class="line">    <span class="comment"># 添加头信息</span></span><br><span class="line">    headers = &#123;<span class="string">'User-Agent'</span>: <span class="string">'Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/55.0.2883.87 UBrowser/6.2.3964.2 Safari/537.36'</span>&#125;</span><br><span class="line">    html = requests.get(url, headers=headers)</span><br><span class="line">    <span class="keyword">if</span> html.status_code == <span class="number">200</span>:</span><br><span class="line">        <span class="keyword">return</span> html.text</span><br><span class="line">    <span class="keyword">return</span> <span class="literal">None</span></span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">parse_one_page</span><span class="params">(html)</span>:</span></span><br><span class="line">    pattern = re.compile(<span class="string">'&lt;tr&gt;.*?num .*?&gt;(.*?)&lt;/td&gt;.*?colorgray3.*?&gt;(.*?)&lt;/a&gt;.*?linka.*?&gt;(.*?)&lt;/a&gt;.*?colorgray9"&gt;(.*?)&lt;/td&gt;.*?colorgray9"&gt;(.*?)&lt;/td&gt;.*?fnt600"&gt;(.*?)&lt;/td&gt;.*?colorgray9"&gt;(.*?)&lt;/td&gt;.*?colorgray9"&gt;(.*?)&lt;/td&gt;.*?&lt;/tr&gt;'</span>, re.S)</span><br><span class="line">    items = re.findall(pattern, html)</span><br><span class="line">    <span class="keyword">for</span> item <span class="keyword">in</span> items:</span><br><span class="line">        <span class="keyword">yield</span> &#123;</span><br><span class="line">            <span class="string">'排名'</span>: item[<span class="number">0</span>],</span><br><span class="line">            <span class="string">'姓名'</span>: item[<span class="number">1</span>],</span><br><span class="line">            <span class="string">'队名'</span>: item[<span class="number">2</span>],</span><br><span class="line">            <span class="string">'位置'</span>: item[<span class="number">3</span>],</span><br><span class="line">            <span class="string">'出场次数'</span>: item[<span class="number">4</span>],</span><br><span class="line">            <span class="string">'进球数'</span>: item[<span class="number">5</span>],</span><br><span class="line">            <span class="string">'点球数'</span>: item[<span class="number">6</span>],</span><br><span class="line">            <span class="string">'平均进球时间'</span>: item[<span class="number">7</span>]</span><br><span class="line">        &#125;</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">write_to_file</span><span class="params">(content)</span>:</span></span><br><span class="line">    <span class="keyword">with</span> open(<span class="string">'result.txt'</span>, <span class="string">'a'</span>, encoding=<span class="string">'utf-8'</span>) <span class="keyword">as</span> f:</span><br><span class="line">        f.write(json.dumps(content, ensure_ascii=<span class="literal">False</span>) + <span class="string">'\n'</span>)</span><br><span class="line"><span class="function"><span class="keyword">def</span> <span class="title">main</span><span class="params">(dataPage)</span>:</span></span><br><span class="line">    url = <span class="string">'https://data.huanhuba.com/ucl/goals-410-1-37521-p'</span> + str(dataPage) + <span class="string">'/'</span></span><br><span class="line">    html = get_one_page(url)</span><br><span class="line">    <span class="keyword">for</span> item <span class="keyword">in</span> parse_one_page(html):</span><br><span class="line">        print(item)</span><br><span class="line">        write_to_file(item)</span><br><span class="line"><span class="keyword">if</span> __name__ == <span class="string">'__main__'</span>:</span><br><span class="line">    <span class="keyword">for</span> dataPage <span class="keyword">in</span> range(<span class="number">1</span>,<span class="number">17</span>):</span><br><span class="line">        main(dataPage)</span><br><span class="line">        time.sleep(<span class="number">1</span>)</span><br></pre></td></tr></table></figure>
+
+<h2 id="运行结果"><a href="#运行结果" class="headerlink" title="运行结果"></a>运行结果</h2><p><img src="/articles/crawler-2/1569486057184.png" alt="1569486057184"></p>
+<p>控制台出现下列输出结果，并保存在了result.txt文件中，如下图所示。</p>
+<p><img src="/articles/crawler-2/1569486089038.png" alt="1569486089038"></p>
+<h2 id="一点碎碎念"><a href="#一点碎碎念" class="headerlink" title="一点碎碎念"></a>一点碎碎念</h2><p>由于这里我的练习目的在于练习爬虫与解析的基本技巧与requests库的使用，因此我最后文件保存为了txt格式，其实如果调用第三方库保存为csv或者xls格式，可以更有利于进一步的数据科学研究，也有利于进行数据可视化。</p>
+<p>掌握了类似的方法后，我们也可以利用爬虫去爬取我们支持的其它球队的信息啦！~（大雾）</p>
+<p>最后，梅西好棒~</p>
+<p>最后的最后，本节代码上传到了我的Github上，点击下方按钮即可速览代码，欢迎大家点击与关注。</p>
+<iframe style="margin-left: 2px; margin-bottom:-5px;" frameborder="0" scrolling="0" width="91px" height="20px" src="https://ghbtns.com/github-btn.html?user=aspxcor&repo=Python-Spider-100-Days&type=star&count=false"></iframe>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Ding Zhi</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://dingzhi.ga/articles/crawler-2/">http://dingzhi.ga/articles/crawler-2/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Attribution-NonCommercial-NoDerivs 3.0 Unported <a href="https://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh" rel="external nofollow">(CC BY-NC-ND 3.0)</a></span>
+                    </p>
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/Python/"># Python</a>
+                    
+                        <a href="/tags/网络爬虫/"># 网络爬虫</a>
+                    
+                        <a href="/tags/正则表达式/"># 正则表达式</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/articles/ds-1/">数据结构（一）| 学前札记</a>
+            
+            
+            <a class="next" rel="next" href="/articles/network-2/">计算机网络学习笔记(二)——物理层</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+
+        </div>
+        <footer id="footer" class="footer">
+    <title>打赏</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!--<script type="text/javascript" src="http://static.tctip.com/tctip-1.0.2.js"></script>-->
+<script type="text/javascript" src="http://dingzhi.ga/js/tctip-1.0.3.min.js"></script>
+<script>
+  new tctip({
+    top: '20%',
+    button: {
+      id: 9,
+      type: 'dashang'
+    },
+    list: [
+      {
+        type: 'alipay',
+        qrImg: 'http://dingzhi.ga/images/alipay.jpg'
+      }, {
+        type: 'wechat',
+        qrImg: 'http://dingzhi.ga/images/wechat.jpg'
+      }
+    ]
+  }).init()
+</script>
+友情链接<span lang="EN-US"> | <a href="http://fenghe.us/" target="_blank">Fenghe's
+Blog |</a>
+<a href="http://www.kamzero.cn" target="_blank">Sherry's
+Blog |</a>
+<span>© Ding Zhi 2019 | All Rights Reserved</span>
+</span></footer>
+    </div>
+</body>
+</html>

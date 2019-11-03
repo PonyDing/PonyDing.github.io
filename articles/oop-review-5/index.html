@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="description" content="Keep learning.">
+
+
+    <meta name="keywords" content="Python,Distributed Computing,AI">
+
+
+<title>面向对象程序设计（五）| 虚函数、重载 | DingZhi&#39;s Blog</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">DingZhi&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">DingZhi&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?3c2cb6a51b306a50c53ae432e39de395";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">面向对象程序设计（五）| 虚函数、重载</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Ding Zhi</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">August 5, 2019&nbsp;&nbsp;5:24:37</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/面向对象程序设计/">面向对象程序设计</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h2 id="虚函数"><a href="#虚函数" class="headerlink" title="虚函数"></a>虚函数</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">virtual</span>&lt;类型说明符&gt;&lt;函数名&gt;(&lt;参数表&gt;)</span><br><span class="line"><span class="comment">//被关键字virtual说明的函数称为虚函数</span></span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">//函数体</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>注意：<font color="red">①通过定义虚函数来使用C++提供的多态机制时，派生类应该从它的基类公有派生。赋值兼容规则成立的前提条件是派生类从其基类公有派生<br>②使用对象名和点运算符的方式也可以调用虚函数，但是这种调用在编译时进行的是静态联编<br>③必须首先在基类中定义虚函数<br>④虚函数必须是其所在类的成员函数，而不能是友元函数，也不能是静态成员函数，因为虚函数调用要靠特定的对象来决定该激活哪个函数。但是虚函数可以在另一个类中被声明为友元函数。<br>⑤内联函数、构造函数不能是虚函数。⑥类外定义虚函数不加virtual关键字。</font></p>
+<h3 id="虚析构函数"><a href="#虚析构函数" class="headerlink" title="虚析构函数"></a>虚析构函数</h3><p><em>如果一个类的析构函数是虚函数，那么，由它派生而来的所有派生类的析构函数也是虚析构函数，不管它是否使用了关键字virtual进行说明。</em></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">virtual</span> ~类名（）；</span><br></pre></td></tr></table></figure>
+
+<h3 id="虚函数重载与普通函数重载的区别"><a href="#虚函数重载与普通函数重载的区别" class="headerlink" title="虚函数重载与普通函数重载的区别"></a>虚函数重载与普通函数重载的区别</h3><ul>
+<li>普通的函数重载时，其函数的参数个数或参数类型必须有所不同，函数的返回类型也可以不同。 </li>
+<li>当重载一个虚函数时，也就是说在派生类中重新定义虚函数时，要求函数名、返回类型、参数个数、参数的类型和顺序与基类中的虚函数原型完全相同。</li>
+<li>如果仅仅返回类型不同，其余均相同，系统会给出错误信息;</li>
+<li>若仅仅函数名相同，而参数的个数、类型或顺序不同，系统将它作为普通的函数重载，这时将丢失虚函数的特性。</li>
+</ul>
+<h3 id="多继承时的虚函数"><a href="#多继承时的虚函数" class="headerlink" title="多继承时的虚函数"></a>多继承时的虚函数</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><span class="line">	<span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream.h&gt;</span></span></span><br><span class="line">	<span class="class"><span class="keyword">class</span> <span class="title">Base1</span>&#123;</span></span><br><span class="line">	<span class="keyword">public</span>：</span><br><span class="line">	    <span class="function"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="title">fun</span><span class="params">()</span>       <span class="comment">//定义fun()是虚函数</span></span></span><br><span class="line"><span class="function">	    </span>&#123;   <span class="built_in">cout</span>&lt;&lt;<span class="string">"--Base1--\n"</span>;  &#125;</span><br><span class="line">	&#125;;</span><br><span class="line">	<span class="class"><span class="keyword">class</span> <span class="title">Base2</span>&#123;</span></span><br><span class="line">	<span class="keyword">public</span>：</span><br><span class="line">	    <span class="function"><span class="keyword">void</span> <span class="title">fun</span><span class="params">()</span>         <span class="comment">//定义fun()为普通的成员函数</span></span></span><br><span class="line"><span class="function">	    </span>&#123;   <span class="built_in">cout</span>&lt;&lt;<span class="string">"--Base2--\n"</span>; &#125;</span><br><span class="line">	&#125;;</span><br><span class="line">	<span class="class"><span class="keyword">class</span> <span class="title">Derived</span>：<span class="title">public</span> <span class="title">Base1</span>,<span class="title">public</span> <span class="title">Base2</span>&#123;</span></span><br><span class="line">	<span class="keyword">public</span>：</span><br><span class="line">	    <span class="function"><span class="keyword">void</span> <span class="title">fun</span><span class="params">()</span></span></span><br><span class="line"><span class="function">	    </span>&#123;   <span class="built_in">cout</span>&lt;&lt;<span class="string">"--Derived--\n"</span>;  &#125;</span><br><span class="line">	&#125;;</span><br><span class="line">    <span class="function"><span class="keyword">void</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function">	  </span>&#123;</span><br><span class="line">	    Base1 obj1,*ptr1;  </span><br><span class="line">	    Base2 obj2,*ptr2;  </span><br><span class="line">	    Derived obj3;     </span><br><span class="line">         ptr1=&amp;obj1;       </span><br><span class="line">	    ptr1-&gt;fun();        </span><br><span class="line">         ptr2=&amp;obj2;         </span><br><span class="line">         ptr2-&gt;fun(); </span><br><span class="line">         ptr1=&amp;obj3;    </span><br><span class="line">         ptr1-&gt;fun(); </span><br><span class="line">         ptr2=&amp;obj3; </span><br><span class="line">         ptr2-&gt;fun();  </span><br><span class="line">       &#125;</span><br><span class="line"><span class="comment">/*运行结果：</span></span><br><span class="line"><span class="comment">--Base1--</span></span><br><span class="line"><span class="comment">--Base2--</span></span><br><span class="line"><span class="comment">--Derived--</span></span><br><span class="line"><span class="comment">--Base2—</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="纯虚函数与抽象类"><a href="#纯虚函数与抽象类" class="headerlink" title="纯虚函数与抽象类"></a>纯虚函数与抽象类</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">virtual</span>  &lt;函数类型&gt;  &lt;函数名&gt; ( 参数表 ) = <span class="number">0</span>；</span><br></pre></td></tr></table></figure>
+
+<p>一个具有纯虚函数的类称为<strong>抽象类</strong>；不允许从具体类派生出抽象类；抽象类不能用作参数类型、函数返回类型或显式转换的类型；可以声明指向抽象类的指针或引用，此指针可以指向它的派生类，进而实现多态性；抽象类的析构函数可以被声明为纯虚函数，这时，应该至少提供该析构函数的一个实现。</p>
+<h2 id="运算符重载"><a href="#运算符重载" class="headerlink" title="运算符重载"></a>运算符重载</h2><ul>
+<li>类属关系运算符“.”、作用域分辨符“::”、成员指针运算符“*”、sizeof运算符和三目运算符“？：”不能重载。</li>
+<li>重载之后运算符的优先级和结合性都不能改变，单目运算符只能重载为单目运算符，双目运算符只能重载为双目运算符。</li>
+<li>运算符的重载形式有两种：重载为类的成员函数;重载为类的友元函数。</li>
+<li>不能改变运算符操作数的个数；不能改变运算符原有的语法结构。</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//重载为类的成员函数格式</span></span><br><span class="line">&lt;类型&gt; &lt;类名&gt;:: <span class="keyword">operator</span> &lt;要重载的运算符&gt;（形参表）</span><br><span class="line">     &#123;</span><br><span class="line">         函数体</span><br><span class="line">      &#125;</span><br><span class="line"><span class="comment">//重载为类的友元函数格式</span></span><br><span class="line"><span class="keyword">friend</span>  &lt;函数类型&gt;  <span class="keyword">operator</span>  &lt;运算符&gt;(形参表)</span><br><span class="line">&#123;</span><br><span class="line">      函数体；</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//在重载为友元函数的二元运算符被定义时，格式为</span></span><br><span class="line">&lt;函数返回类型&gt; <span class="keyword">operator</span> &lt;重载运算符&gt;(&lt;形参<span class="number">1</span>&gt;, &lt;形参<span class="number">2</span>&gt;)</span><br><span class="line">&#123; </span><br><span class="line">	函数体;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//在重载为友元函数的一元运算符被定义时，格式为</span></span><br><span class="line">&lt;函数返回类型&gt; <span class="keyword">operator</span>&lt;一元运算符&gt; (类名 &amp;对象)</span><br><span class="line">&#123;</span><br><span class="line">	函数体</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="运算符重载为成员函数"><a href="#运算符重载为成员函数" class="headerlink" title="运算符重载为成员函数"></a>运算符重载为成员函数</h3><h4 id="双目运算：oprd1-B-oprd2"><a href="#双目运算：oprd1-B-oprd2" class="headerlink" title="双目运算：oprd1 B oprd2"></a>双目运算：oprd1 B oprd2</h4><p>把B重载为oprd1所属类的成员函数，只有一个形参，形参的类型是oprd2所属类。例如，经过重载之后，表达式oprd1 + oprd2就相当于函数调用</p>
+ <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">oprd1.<span class="keyword">operator</span> +(oprd2)</span><br></pre></td></tr></table></figure>
+
+<h4 id="单目运算"><a href="#单目运算" class="headerlink" title="单目运算"></a>单目运算</h4><h5 id="前置单目运算：U-oprd"><a href="#前置单目运算：U-oprd" class="headerlink" title="前置单目运算：U oprd"></a>前置单目运算：U oprd</h5><p>把U重载为oprd所属类的成员函数，没有形参。例如，“++”重载的语法形式为：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;函数类型&gt;  <span class="keyword">operator</span>  ++( );</span><br></pre></td></tr></table></figure>
+
+<p> <code>++ oprd</code> 就相当于函数调用<code>oprd.operator  ++( );</code></p>
+<h5 id="后置单目运算-oprd-V"><a href="#后置单目运算-oprd-V" class="headerlink" title="后置单目运算 oprd V"></a>后置单目运算 oprd V</h5><p>运算符V重载为oprd所属类的成员函数，带有一个整型(int)形参。例如，后置单目运算符“- -”重载的语法形式为：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;函数类型&gt;  <span class="keyword">operator</span> -- ( <span class="keyword">int</span> );</span><br></pre></td></tr></table></figure>
+
+<p><code>oprd--</code> 就相当于函数调用<code>oprd.operator --(0);</code></p>
+<h4 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h4><blockquote>
+<p>对于++（或–）运算符的重载，因为编译器不能区分出++（或–）是前置的还是后置的，所以要加上(int)来区分。</p>
+</blockquote>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">operator</span>++();   <span class="comment">//重载前置++</span></span><br><span class="line"><span class="keyword">operator</span>++(<span class="keyword">int</span>); <span class="comment">//重载后置++</span></span><br><span class="line"><span class="keyword">operator</span>--();   <span class="comment">//重载前置--</span></span><br><span class="line"><span class="keyword">operator</span>--(<span class="keyword">int</span>); <span class="comment">//重载后置--</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="运算符重载为友元函数"><a href="#运算符重载为友元函数" class="headerlink" title="运算符重载为友元函数"></a>运算符重载为友元函数</h3><h4 id="双目运算：oprd1-B-oprd2-1"><a href="#双目运算：oprd1-B-oprd2-1" class="headerlink" title="双目运算：oprd1 B oprd2"></a>双目运算：oprd1 B oprd2</h4><p>双目运算符B重载为oprd1所属类的友元函数，该函数有两个形参，表达式<code>oprd1 B oprd2</code>就相当于函数调用<code>operator B (oprd1，oprd2)</code>。</p>
+<h4 id="单目运算-1"><a href="#单目运算-1" class="headerlink" title="单目运算"></a>单目运算</h4><h5 id="前置单目运算U-oprd"><a href="#前置单目运算U-oprd" class="headerlink" title="前置单目运算U oprd"></a>前置单目运算U oprd</h5><p>前置单目运算符U重载为<code>oprd</code>所属类的友元函数，表达式U oprd相当于函数调用<code>operator U(oprd)</code>。</p>
+<h5 id="后置单目运算oprd-V"><a href="#后置单目运算oprd-V" class="headerlink" title="后置单目运算oprd V"></a>后置单目运算oprd V</h5><p>后置单目运算符V重载为<code>oprd</code>所属类的友元函数，表达式oprd V相当于函数调用<code>operator V(oprd，int)</code>。</p>
+<h3 id="输入输出操作符的重载"><a href="#输入输出操作符的重载" class="headerlink" title="输入输出操作符的重载"></a>输入输出操作符的重载</h3><h4 id="输出操作符-lt-lt-的重载"><a href="#输出操作符-lt-lt-的重载" class="headerlink" title="输出操作符&lt;&lt;的重载"></a>输出操作符&lt;&lt;的重载</h4><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">ostream &amp; <span class="keyword">operator</span> &lt;&lt; (ostream &amp;,<span class="keyword">const</span> 自定义类 &amp;);</span><br></pre></td></tr></table></figure>
+
+<h4 id="输入操作符-gt-gt-的重载"><a href="#输入操作符-gt-gt-的重载" class="headerlink" title="输入操作符&gt;&gt;的重载"></a>输入操作符&gt;&gt;的重载</h4><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">istream &amp; <span class="keyword">operator</span> &gt;&gt; (istream &amp;, 自定义类 &amp;);</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>和输出操作符不同的是输入操作符必须处理错误和文件结束的可能性。</p>
+</blockquote>
+<h3 id="比较运算符重载"><a href="#比较运算符重载" class="headerlink" title="比较运算符重载"></a>比较运算符重载</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">bool</span> <span class="keyword">operator</span> == ( 类型名 ) ;</span><br><span class="line"><span class="keyword">bool</span> <span class="keyword">operator</span> !=  (类型名 ) ;</span><br></pre></td></tr></table></figure>
+
+<h3 id="下标运算符-重载"><a href="#下标运算符-重载" class="headerlink" title="下标运算符[]重载"></a>下标运算符[]重载</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">类型名 &amp;<span class="keyword">operator</span> [ ] ( <span class="keyword">int</span>)</span><br><span class="line"><span class="comment">//关于左值与右值的区别</span></span><br><span class="line">a[<span class="number">3</span>] = <span class="number">5</span>;<span class="comment">// 这里用的是double &amp; operator[](int i); </span></span><br><span class="line"><span class="keyword">double</span> x = a[<span class="number">3</span>];<span class="comment">// 这里用的是double operator[](int i)const;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="new与delete运算符重载"><a href="#new与delete运算符重载" class="headerlink" title="new与delete运算符重载"></a>new与delete运算符重载</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> *<span class="keyword">operator</span> <span class="title">new</span> <span class="params">( <span class="keyword">size_t</span>  size)</span></span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="keyword">operator</span> <span class="title">delete</span><span class="params">( <span class="keyword">void</span> * p )</span></span></span><br></pre></td></tr></table></figure>
+
+<h3 id="强制类型转换运算符重载"><a href="#强制类型转换运算符重载" class="headerlink" title="强制类型转换运算符重载"></a>强制类型转换运算符重载</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">operator</span> 类型名 () ;</span><br><span class="line"><span class="comment">//其后也可以加const限定,也即</span></span><br><span class="line"><span class="keyword">operator</span> 类型名 () <span class="keyword">const</span>;</span><br></pre></td></tr></table></figure>
+
+<p>特点:没有返回值、功能类似强制转换</p>
+<h3 id="赋值运算符重载"><a href="#赋值运算符重载" class="headerlink" title="赋值运算符重载"></a>赋值运算符重载</h3><blockquote>
+<p>对于赋值运算符重载一般包括以上几个步骤，<font color="red"><strong>首先要检查是否自赋值，如果是要立即返回，如果不返回，后面的语句会把自己所指空间删掉，从而导致错误</strong></font>；第二步要释放原有的内存资源；第三步要分配新的内存资源，并复制内容；第四步是返回本对象的引用。如果没有指针操作，则没有第二步操作。<br>赋值运算符与拷贝构造函数在功能上有些类似，都是用一个对象去填另一个对象，但拷贝构造函数是在对象建立的时候执行，赋值运算符是在对象建立之后执行。</p>
+</blockquote>
+<h3 id="总结与整理"><a href="#总结与整理" class="headerlink" title="总结与整理"></a>总结与整理</h3><ul>
+<li>所有赋值运算符改变左值。所有赋值运算符返回值对于左值应该是nonconst引用</li>
+<li>重载不能改变该运算符用于内置类型时的含义，正如程序员不能改变运算符+用于两个int型相加时的含义。</li>
+<li>运算符函数的参数至少有一个必须是类的对象或者类的对象的引用，这种规定可以防止程序员运用运算符改变内置类型的函义。</li>
+<li>赋值（=）、下标（[]）、调用（( )）和成员访问箭头（-&gt;）等操作符必须定义为成员，将这些操作符定义为非成员函数在编译时标记为错误。</li>
+<li>像赋值一样，复合赋值操作符通常应定义为类的成员函数。定义成非成员函数不会出现编译错误。</li>
+</ul>
+<h2 id="类型重载"><a href="#类型重载" class="headerlink" title="类型重载"></a>类型重载</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> &lt;类名1&gt;</span></span><br><span class="line"><span class="class">     &#123;</span></span><br><span class="line">        <span class="keyword">public</span>:</span><br><span class="line">           <span class="keyword">operator</span> &lt;类名<span class="number">2</span>&gt;( );</span><br><span class="line">           ……</span><br><span class="line">      &#125;;</span><br><span class="line">      &lt;类名<span class="number">1</span>&gt;::<span class="keyword">operator</span> &lt;类名<span class="number">2</span>&gt;()</span><br><span class="line">      &#123;     函数体； &#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>其中<code>operator&lt;类名2&gt;</code>为转换函数的函数名，转换函数的作用是将类型1的对象转换成类型2的对象。类中类型转换函数必须是非静态的成员函数，不能定义成友元函数，无返回值类型且不带参数。</p>
+</blockquote>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Ding Zhi</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://dingzhi.ga/articles/oop-review-5/">http://dingzhi.ga/articles/oop-review-5/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Attribution-NonCommercial-NoDerivs 3.0 Unported <a href="https://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh" rel="external nofollow">(CC BY-NC-ND 3.0)</a></span>
+                    </p>
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/C-C/"># C/C++</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/articles/oop-review-6/">面向对象程序设计（六）| 模板、异常与命名空间</a>
+            
+            
+            <a class="next" rel="next" href="/articles/oop-review-4/">面向对象程序设计（四）| 继承和派生</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+
+        </div>
+        <footer id="footer" class="footer">
+    <title>打赏</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!--<script type="text/javascript" src="http://static.tctip.com/tctip-1.0.2.js"></script>-->
+<script type="text/javascript" src="http://dingzhi.ga/js/tctip-1.0.3.min.js"></script>
+<script>
+  new tctip({
+    top: '20%',
+    button: {
+      id: 9,
+      type: 'dashang'
+    },
+    list: [
+      {
+        type: 'alipay',
+        qrImg: 'http://dingzhi.ga/images/alipay.jpg'
+      }, {
+        type: 'wechat',
+        qrImg: 'http://dingzhi.ga/images/wechat.jpg'
+      }
+    ]
+  }).init()
+</script>
+友情链接<span lang="EN-US"> | <a href="http://fenghe.us/" target="_blank">Fenghe's
+Blog |</a>
+<a href="http://www.kamzero.cn" target="_blank">Sherry's
+Blog |</a>
+<span>© Ding Zhi 2019 | All Rights Reserved</span>
+</span></footer>
+    </div>
+</body>
+</html>

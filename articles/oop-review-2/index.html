@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="description" content="Keep learning.">
+
+
+    <meta name="keywords" content="Python,Distributed Computing,AI">
+
+
+<title>面向对象程序设计（二）| 引用、类和对象 | DingZhi&#39;s Blog</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">DingZhi&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">DingZhi&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?3c2cb6a51b306a50c53ae432e39de395";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">面向对象程序设计（二）| 引用、类和对象</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Ding Zhi</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">August 5, 2019&nbsp;&nbsp;5:19:37</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/面向对象程序设计/">面向对象程序设计</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h2 id="引用"><a href="#引用" class="headerlink" title="引用"></a>引用</h2><p>类型标识符    <code>&amp;引用名=目标变量名；</code><br>如：int a;<br>       int &amp;ra=a;   //定义引用ra,它是变量a的引用，即别名<br>由于指针变量也是变量，所以，可以声明一个指针变量的引用。<br>方法是： <code>类型标识符 *&amp;引用名=指针变量名；</code></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">  <span class="keyword">int</span> *a;      <span class="comment">//定义指针变量a</span></span><br><span class="line">  <span class="keyword">int</span> *&amp;p=a;   <span class="comment">//定义引用p，初始化为指针变量a，所以p是a的引用（别名）</span></span><br><span class="line">  <span class="keyword">int</span> b=<span class="number">10</span>;</span><br><span class="line">  p=&amp;b;        <span class="comment">//等价于a=&amp;b，即将变量b的地址赋给a。</span></span><br><span class="line">  <span class="built_in">cout</span>&lt;&lt;*a&lt;&lt;<span class="built_in">endl</span>;    <span class="comment">//输出变量b的值</span></span><br><span class="line">  <span class="built_in">cout</span>&lt;&lt;*p&lt;&lt;<span class="built_in">endl</span>;    <span class="comment">//等价于cout&lt;&lt;*a;</span></span><br><span class="line"><span class="built_in">cout</span>&lt;&lt;a&lt;&lt;<span class="built_in">endl</span>; <span class="comment">//输出a和p的地址</span></span><br><span class="line"><span class="built_in">cout</span>&lt;&lt;p&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><p>不能声明引用的引用，也不能定义引用的指针</p>
+</li>
+<li><p>不能建立数组的引用，因为数组是一个由若干个元素所组成的集合，所以就无法建立一个数组的别名。</p>
+</li>
+<li><p>不能建立空指针的引用，如：不能建立int &amp;rp=NULL;</p>
+</li>
+<li><p>不能建立空类型void的引用，如：不能建立<code>void &amp;ra=3;</code>因为尽管在C++语言中有void数据类型，但没有任何一个变量或常量属于void类型。</p>
+</li>
+<li><p>函数可以返回一个引用，将函数说明为返回一个引用的主要目的是：为了将函数用在赋值运算符的左边。<br>   要以引用返回函数值，则函数定义时要按以下格式：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">类型标识符 &amp;函数名（形参列表及类型说明）</span><br><span class="line"> &#123;函数体&#125;</span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ul>
+<ul>
+<li>用const限定引用<br>   声明方式：<code>const 类型标识符 &amp;引用名=目标变量名；</code><br>   用这种方式声明的引用，不能通过引用对目标变量的值进行修改,从而使引用的目标成为const，达到了引用的安全性。 </li>
+</ul>
+<h2 id="类和对象"><a href="#类和对象" class="headerlink" title="类和对象"></a>类和对象</h2><ul>
+<li><p>private处于类体中第一部分时，关键字private可以省略。</p>
+</li>
+<li><p>数据成员可以是任何数据类型，但不能用自动(auto)、寄存器(register)或外部(extern)进行声明。</p>
+</li>
+<li><p>不能在类声明中给数据成员赋值。C++规定，只有在类对象定义之后才能给数据成员赋初值</p>
+</li>
+<li><p>在声明类的同时定义的对象是一种全局对象，在它的生存期内任何函数都可以使用它。</p>
+</li>
+<li><p>在类的内部所有成员之间都可以通过成员函数直接访问，但是类的外部不能访问对象的私有成员。</p>
+<p><em>例如下面是一个存在错误的程序</em></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream.h&gt;</span></span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Date</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	    <span class="function"><span class="keyword">void</span> <span class="title">setDate</span><span class="params">(<span class="keyword">int</span> y,<span class="keyword">int</span> m,<span class="keyword">int</span> d)</span></span>;</span><br><span class="line">	    <span class="function"><span class="keyword">void</span> <span class="title">showDate</span><span class="params">()</span></span>;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">int</span> year;</span><br><span class="line">    <span class="keyword">int</span> month;</span><br><span class="line">    <span class="keyword">int</span> day;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">void</span> Date∷setDate(<span class="keyword">int</span> y,<span class="keyword">int</span> m,<span class="keyword">int</span> d)</span><br><span class="line">&#123;</span><br><span class="line">         year=y;</span><br><span class="line">	    month=m;</span><br><span class="line">	    day=d;</span><br><span class="line">&#125;</span><br><span class="line"><span class="keyword">inline</span> <span class="keyword">void</span> Date∷showDate()</span><br><span class="line">&#123;</span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;year&lt;&lt;<span class="string">"."</span>&lt;&lt;month&lt;&lt;<span class="string">"."</span>&lt;&lt;day&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	    Date date1,date2;</span><br><span class="line">	    <span class="built_in">cout</span>&lt;&lt;<span class="string">"Date1 set and output:"</span>&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">	    date1.setDate(<span class="number">1998</span>,<span class="number">4</span>,<span class="number">28</span>);</span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;date1.year&lt;&lt;<span class="string">"."</span>&lt;&lt;date1.month&lt;&lt;<span class="string">"."</span>&lt;&lt;date1.day&lt;&lt;<span class="built_in">endl</span>; <span class="comment">//错误</span></span><br><span class="line">	    <span class="built_in">cout</span>&lt;&lt;<span class="string">"Date2 set and output："</span>&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">	    date2.setDate(<span class="number">2002</span>,<span class="number">11</span>,<span class="number">14</span>);</span><br><span class="line">	    <span class="built_in">cout</span>&lt;&lt;date2.year&lt;&lt;<span class="string">"."</span>&lt;&lt;date2.month&lt;&lt;<span class="string">"."</span>&lt;&lt;date2.day&lt;&lt;<span class="built_in">endl</span>; <span class="comment">//错误</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p><em>应该改为：</em></p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">date1.showDate(); </span><br><span class="line">date2.showDate();</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>说明为私有的成员只能被类中成员函数访问,不能在类的外部,通过类的对象进行访问。</p>
+</li>
+<li><p><strong>对象赋值语句：</strong>两个同类型的变量之间可以相互赋值。同类型的对象间也可以进行赋值，当一个对象赋值给另一个对象时，所有的数据成员都会逐位拷贝。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream.h&gt;</span></span></span><br><span class="line">    <span class="class"><span class="keyword">class</span> <span class="title">abc</span>&#123;</span></span><br><span class="line">	......</span><br><span class="line">   &#125;;</span><br><span class="line">	main()</span><br><span class="line">	&#123;    abc o1,o2;</span><br><span class="line">	     o1.init(<span class="number">12</span>,<span class="number">34</span>);</span><br><span class="line">	     o2=o1;        <span class="comment">// 将对象o1数据成员的值赋给对象o2</span></span><br><span class="line">	     ......</span><br><span class="line">	&#125;</span><br></pre></td></tr></table></figure>
+
+<p><em>上面的对象赋值是通过缺省的赋值运算符函数实现的。当类中存在指针时，使用缺省的赋值运算符进行对象赋值，可能会产生错误。</em></p>
+</li>
+<li><p>类的构造函数是在对象进入其作用域时（对象使用前）调用的。 </p>
+</li>
+<li><p>构造函数创建对象的两种语法</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">类名  对象名[(实参表)];</span><br><span class="line">类名 *指针变量 = <span class="keyword">new</span> 类名[(实参表)];</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>成员初始化表的构造函数</p>
+<p>对于常量类型和引用类型的数据成员,不能在构造函数中用赋值语句直接赋值,C++提供初始化表进行置初值。</p>
+<ul>
+<li><p>带有成员初始化表的构造函数的一般形式如下:</p>
+  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">类名::构造函数名([参数表])[:(成员初始化表)]</span><br><span class="line">&#123;</span><br><span class="line">    <span class="comment">// 构造函数体</span></span><br><span class="line">&#125;</span><br><span class="line">成员初始化表的一般形式为:</span><br><span class="line">  数据成员名<span class="number">1</span>(初始值<span class="number">1</span>),数据成员名<span class="number">2</span>(初始值<span class="number">2</span>),……</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>如果需要将数据成员存放在堆中或数组中，则应在构造函数中使用赋值语句，即使构造函数有成员初始化表也应如此。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span>  <span class="title">C</span>&#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    C(<span class="keyword">int</span> I,<span class="keyword">char</span> Ch,<span class="keyword">float</span> F,<span class="keyword">char</span> N[]):i(I),ch(Ch),f(F)<span class="comment">//学习初始化列表写法</span></span><br><span class="line">    &#123; <span class="built_in">strcpy</span> (name,N);&#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">    <span class="keyword">int</span> i;</span><br><span class="line">    <span class="keyword">char</span> ch;</span><br><span class="line">    <span class="keyword">float</span> f;</span><br><span class="line">    <span class="keyword">char</span> name[<span class="number">25</span>];</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><p>*<font color="Red">类成员是按照它们在类里被声明的顺序初始化的,与它们在初始化表中列出的顺序无关。</font>*</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span><span class="meta-string">&lt;iostream.h&gt;</span></span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">D</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">	    D(<span class="keyword">int</span> i):mem2(i),mem1(mem2+<span class="number">1</span>)</span><br><span class="line">	    &#123;</span><br><span class="line">	        <span class="built_in">cout</span>&lt;&lt;<span class="string">"mem1: "</span>&lt;&lt;mem1&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">	        <span class="built_in">cout</span>&lt;&lt;<span class="string">"mem2: "</span>&lt;&lt;mem2&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">    &#125;</span><br><span class="line"><span class="keyword">private</span>:</span><br><span class="line">	    <span class="keyword">int</span> mem1;</span><br><span class="line">	    <span class="keyword">int</span> mem2;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">	    <span class="function">D <span class="title">d</span><span class="params">(<span class="number">15</span>)</span></span>;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">//运行结果</span></span><br><span class="line"><span class="comment">//mem1: -858993459</span></span><br><span class="line"><span class="comment">//mem2: 15</span></span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ul>
+<ul>
+<li><p>拷贝构造函数</p>
+<ul>
+<li><p>调用拷贝构造函数的三种情况</p>
+<ul>
+<li><p>当用类的一个对象去初始化该类的另一个对象时。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Coord <span class="title">p2</span><span class="params">(p1)</span></span>; <span class="comment">// 用对象p1初始化对象p2,拷贝构造函数被调用(代入法)</span></span><br><span class="line">      Coord p3=p1; <span class="comment">// 用对象p1初始化对象p3,拷贝构造函数被调用(赋值法)</span></span><br><span class="line">      			<span class="comment">//这时需要调用拷贝构造函数</span></span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<pre><code>* 当函数的形参是类的对象,调用函数,进行形参和实参结合时。  
+
+  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"> fun1(Coord p)      <span class="comment">// 函数的形参是类的对象</span></span><br><span class="line"> &#123; </span><br><span class="line">    p.print();</span><br><span class="line"> &#125;</span><br><span class="line"> main()</span><br><span class="line">&#123;</span><br><span class="line">  <span class="function">Coord <span class="title">p1</span><span class="params">(<span class="number">10</span>,<span class="number">20</span>)</span></span>;</span><br><span class="line">  fun1(p1);          <span class="comment">// 当调用函数,进行形参和实参结合时,</span></span><br><span class="line">                            调用拷贝构造函数</span><br><span class="line">  <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+
+* 当函数的返回值是对象,函数执行完成,返回调用者时。
+
+  <figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Coord <span class="title">fun2</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;    <span class="function">Coord <span class="title">p1</span><span class="params">(<span class="number">10</span>,<span class="number">30</span>)</span></span>;</span><br><span class="line">    <span class="keyword">return</span> p1;    &#125;    <span class="comment">// 函数的返回值是对象</span></span><br><span class="line"></span><br><span class="line">main()</span><br><span class="line">&#123;    Coord p2;</span><br><span class="line">    P2=fun2(); <span class="comment">// 函数执行完成,返回调用者时,调用拷贝构造函数                                  </span></span><br><span class="line">    <span class="keyword">return</span> <span class="number">0</span>;  &#125;</span><br></pre></td></tr></table></figure></code></pre><ul>
+<li><p>析构函数</p>
+<ul>
+<li>析构函数不能重载，一个类中只有一个</li>
+<li>auto局部对象：局部自动对象(例如在函数中定义的对象)，则在建立对象时调用其构造函数。如果函数被多次调用，则在每次建立对象时都要调用构造函数。在函数调用结束、对象释放时先调用析构函数。</li>
+<li>static局部对象：如果在函数中定义静态局部对象，则只在程序第一次调用此函数建立对象时调用构造函数一次，在调用结束时对象并不释放，因此也不调用析构函数，只在main函数结束或调用exit函数结束程序时，才调用析构函数.</li>
+</ul>
+</li>
+</ul>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Ding Zhi</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://dingzhi.ga/articles/oop-review-2/">http://dingzhi.ga/articles/oop-review-2/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Attribution-NonCommercial-NoDerivs 3.0 Unported <a href="https://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh" rel="external nofollow">(CC BY-NC-ND 3.0)</a></span>
+                    </p>
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/C-C/"># C/C++</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/articles/oop-review-3/">面向对象程序设计（三）| 内联函数、指针、静态成员、友元、对象成员</a>
+            
+            
+            <a class="next" rel="next" href="/articles/oop-review-1/">面向对象程序设计（一）| const、void、重载、new、模板、作用域</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+
+        </div>
+        <footer id="footer" class="footer">
+    <title>打赏</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!--<script type="text/javascript" src="http://static.tctip.com/tctip-1.0.2.js"></script>-->
+<script type="text/javascript" src="http://dingzhi.ga/js/tctip-1.0.3.min.js"></script>
+<script>
+  new tctip({
+    top: '20%',
+    button: {
+      id: 9,
+      type: 'dashang'
+    },
+    list: [
+      {
+        type: 'alipay',
+        qrImg: 'http://dingzhi.ga/images/alipay.jpg'
+      }, {
+        type: 'wechat',
+        qrImg: 'http://dingzhi.ga/images/wechat.jpg'
+      }
+    ]
+  }).init()
+</script>
+友情链接<span lang="EN-US"> | <a href="http://fenghe.us/" target="_blank">Fenghe's
+Blog |</a>
+<a href="http://www.kamzero.cn" target="_blank">Sherry's
+Blog |</a>
+<span>© Ding Zhi 2019 | All Rights Reserved</span>
+</span></footer>
+    </div>
+</body>
+</html>

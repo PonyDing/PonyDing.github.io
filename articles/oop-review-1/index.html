@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="description" content="Keep learning.">
+
+
+    <meta name="keywords" content="Python,Distributed Computing,AI">
+
+
+<title>面向对象程序设计（一）| const、void、重载、new、模板、作用域 | DingZhi&#39;s Blog</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">DingZhi&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">DingZhi&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?3c2cb6a51b306a50c53ae432e39de395";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">面向对象程序设计（一）| const、void、重载、new、模板、作用域</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Ding Zhi</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">August 5, 2019&nbsp;&nbsp;4:31:37</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/面向对象程序设计/">面向对象程序设计</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h2 id="关于const"><a href="#关于const" class="headerlink" title="关于const"></a>关于const</h2><h3 id="const指针"><a href="#const指针" class="headerlink" title="const指针"></a>const指针</h3><ul>
+<li><p>因此以下语句是错误的：<code>pc[3]=‘x’</code>;下列语句是允许的：<code>pc=“efgh”;</code></p>
+</li>
+<li><p>常指针把指针本身，而不是它指向的对象声明为常量。</p>
+<p><code>char const pc=“abcd”;//常指针</code></p>
+<p><code>pc[3]=‘x’;//合法;pc=&quot;efgh&quot;;//出错</code></p>
+</li>
+<li><p>如果用<em>const</em>定义的是一个整型常量，关键词<em>int</em>可以省略</p>
+</li>
+<li><p><em>实参与形参的结合是从左至右顺序进行的。因此指定默认值的参数必须放在形参表列中的最右端，否则出错</em>。</p>
+</li>
+<li><p>函数后的修饰符<em>const</em> —— 表示该成员函数的执 行不会改变类的状态，也就是说不会修改类的数据成员。</p>
+</li>
+</ul>
+<h3 id="const对象保护"><a href="#const对象保护" class="headerlink" title="const对象保护"></a>const对象保护</h3><ul>
+<li>const 对象的一般形式</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">类型名 <span class="keyword">const</span> 对象名[(构造实参表列)];</span><br><span class="line"><span class="keyword">const</span> 类型名 对象名[(构造实参表列)];</span><br></pre></td></tr></table></figure>
+
+<p><em>注意：常对象必须要有初值（因为以后不能改值了）。</em></p>
+<ul>
+<li><p>限定作用：定义为 const 的对象的所有数据成员的值都不能被修改。凡出现调用非const的成员函数，将出现编译错误。但构造函数除外。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="function">Time <span class="keyword">const</span> <span class="title">t1</span><span class="params">(<span class="number">12</span>,<span class="number">34</span>,<span class="number">46</span>)</span></span>;   <span class="comment">// t1是常对象</span></span><br><span class="line">t1.set_Time();  <span class="comment">// 编译错误PE，非const成员函数</span></span><br><span class="line">t2.show_Time();  <span class="comment">// 错误，非const成员函数</span></span><br></pre></td></tr></table></figure>
+
+
+</li>
+</ul>
+<ul>
+<li><p>mutable成员:对数据成员声明为mutable（易变的）时，即使是const对象，仍然可以修改该数据成员值。</p>
+</li>
+<li><p><strong>常对象成员</strong></p>
+<ul>
+<li><p>常数据成员:用 const 声明的常数据成员，其值是不能改变的。只能通过构造函数的参数初始化表对常数据成员进行初始化。</p>
+</li>
+<li><p>常成员函数：成员函数声明中包含const时为常成员函数。此时，该函数只能引用本类中的数据成员，而不能修改它们（注意：可以改mutable成员）。</p>
+</li>
+<li><p><em>注意：const是函数类型的一部分，在声明函数和定义函数时都要有const关键字，在调用时不必加const。</em></p>
+</li>
+<li><p><em>如果已定义了一个常对象，则只能调用其中的const成员函数，而不能调用非const成员函数(不论这些函数是否会修改对象中的数据)。如果需要访问对象中的数据成员，可将常对象中所有成员函数都声明为const成员函数，但应确保在函数中不修改对象中的数据成员。</em></p>
+</li>
+<li><p>指向常对象的指针：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">const</span> 类型 *指针变量名</span><br></pre></td></tr></table></figure>
+
+<p><em>不能通过它来改变所指向目标对象的值，但指针变量的值是可以改变的；如果变量被声明为常对象，只能用指向常对象（变量）的指针变量指向它，而不能非const型指针变量去指向它.</em></p>
+</li>
+<li><p>指向某对象的常指针：指针的值不能改变</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">类型* <span class="keyword">const</span> 指针变量名</span><br></pre></td></tr></table></figure>
+
+
+
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li><p>const修饰函数</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">GetY</span><span class="params">()</span> <span class="keyword">const</span></span>;</span><br><span class="line"><span class="comment">//该函数为只读函数，不允许修改其中的数据成员的值。</span></span><br><span class="line"><span class="function"><span class="keyword">const</span> <span class="keyword">int</span> * <span class="title">GetPosition</span><span class="params">()</span></span>;</span><br><span class="line"><span class="comment">//修饰的是返回值，表示返回的是指针所指向值是常量。</span></span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h2 id="void指针"><a href="#void指针" class="headerlink" title="void指针"></a>void指针</h2><ul>
+<li><p><em>void</em> 通常表示无值，但将<em>void</em>作为指针的类型时，它却表示不确定的类型</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">void</span>  pa;<span class="comment">//错误，不能声明void 类型的指针变量</span></span><br><span class="line"> <span class="keyword">void</span>* pc;<span class="comment">//正确，可以声明void类型的指针</span></span><br></pre></td></tr></table></figure>
+</li>
+<li><p>void型指针可以接受任何类型的指针的赋值，但对已获值的void型指针，对它在进行处理，如输出或传递指针值时，则必须进行强制类型转换，否则会出错。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream.h&gt;</span></span></span><br><span class="line">main()</span><br><span class="line">&#123;<span class="keyword">void</span> *pc;</span><br><span class="line"><span class="keyword">int</span> i=<span class="number">456</span>;</span><br><span class="line"><span class="keyword">char</span> c=<span class="string">'a'</span>;</span><br><span class="line">pc=&amp;i;</span><br><span class="line"><span class="built_in">cout</span>&lt;&lt;*(<span class="keyword">int</span> *)pc&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">pc=&amp;c;</span><br><span class="line"><span class="built_in">cout</span>&lt;&lt;*(<span class="keyword">char</span> *)pc&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line"><span class="keyword">return</span> <span class="number">0</span>;&#125;</span><br></pre></td></tr></table></figure>
+
+</li>
+</ul>
+<h2 id="重载"><a href="#重载" class="headerlink" title="重载"></a>重载</h2><p>重载函数间不能只是函数的返回值不同，应至少在形参的个数、参数类型或参数顺序上有所不同。</p>
+<h2 id="函数模板"><a href="#函数模板" class="headerlink" title="函数模板"></a>函数模板</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">template</span> &lt;<span class="class"><span class="keyword">class</span> <span class="title">T</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="作用域标识符"><a href="#作用域标识符" class="headerlink" title="作用域标识符"></a>作用域标识符</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream.h&gt;</span></span></span><br><span class="line"><span class="keyword">int</span> avar=<span class="number">10</span>;</span><br><span class="line">main()</span><br><span class="line">&#123;</span><br><span class="line"><span class="keyword">int</span> avar;</span><br><span class="line">avar=<span class="number">25</span>;</span><br><span class="line"><span class="built_in">cout</span>&lt;&lt;<span class="string">"local avar ="</span>&lt;&lt;avar&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line"><span class="built_in">cout</span>&lt;&lt;<span class="string">"global avar="</span>&lt;&lt;::avar&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line"><span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h2 id="new标识符"><a href="#new标识符" class="headerlink" title="new标识符"></a>new标识符</h2><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"> 使用<span class="keyword">new</span>为多维数组分配空间时，必须提供所有维的大小，如：<span class="keyword">int</span> *pi=<span class="keyword">new</span> <span class="keyword">int</span>[<span class="number">2</span>][<span class="number">3</span>][<span class="number">4</span>];</span><br><span class="line">其中第一维的界值可以是任何合法的表达式，如：</span><br><span class="line"> <span class="keyword">int</span>  i=<span class="number">3</span>;</span><br><span class="line"> <span class="keyword">int</span>  *pi=<span class="keyword">new</span>  <span class="keyword">int</span>[ i ][<span class="number">2</span>][<span class="number">3</span>];</span><br><span class="line"><span class="keyword">new</span>可在为简单变量分配内存空间的同时，进行初始化。这时的语法形式为：</span><br><span class="line">     指针变量=<span class="keyword">new</span>  类型名(初始值列表) </span><br><span class="line">例如：</span><br><span class="line">p=<span class="keyword">new</span> <span class="keyword">int</span>(<span class="number">99</span>);   <span class="comment">// 动态分配内存，并将99作为初始值赋给它</span></span><br></pre></td></tr></table></figure>
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Ding Zhi</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://dingzhi.ga/articles/oop-review-1/">http://dingzhi.ga/articles/oop-review-1/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Attribution-NonCommercial-NoDerivs 3.0 Unported <a href="https://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh" rel="external nofollow">(CC BY-NC-ND 3.0)</a></span>
+                    </p>
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/C-C/"># C/C++</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/articles/oop-review-2/">面向对象程序设计（二）| 引用、类和对象</a>
+            
+            
+        </section>
+
+
+    </article>
+</div>
+
+
+        </div>
+        <footer id="footer" class="footer">
+    <title>打赏</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!--<script type="text/javascript" src="http://static.tctip.com/tctip-1.0.2.js"></script>-->
+<script type="text/javascript" src="http://dingzhi.ga/js/tctip-1.0.3.min.js"></script>
+<script>
+  new tctip({
+    top: '20%',
+    button: {
+      id: 9,
+      type: 'dashang'
+    },
+    list: [
+      {
+        type: 'alipay',
+        qrImg: 'http://dingzhi.ga/images/alipay.jpg'
+      }, {
+        type: 'wechat',
+        qrImg: 'http://dingzhi.ga/images/wechat.jpg'
+      }
+    ]
+  }).init()
+</script>
+友情链接<span lang="EN-US"> | <a href="http://fenghe.us/" target="_blank">Fenghe's
+Blog |</a>
+<a href="http://www.kamzero.cn" target="_blank">Sherry's
+Blog |</a>
+<span>© Ding Zhi 2019 | All Rights Reserved</span>
+</span></footer>
+    </div>
+</body>
+</html>

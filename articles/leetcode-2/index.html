@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="description" content="Keep learning.">
+
+
+    <meta name="keywords" content="Python,Distributed Computing,AI">
+
+
+<title>LeetCode刷题（二） | 位运算的骚操作 | DingZhi&#39;s Blog</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+            <!-- MathJax配置，可通过单美元符号书写行内公式等 -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Config({
+    "HTML-CSS": {
+        preferredFont: "TeX",
+        availableFonts: ["STIX","TeX"],
+        linebreaks: { automatic:true },
+        EqnChunk: (MathJax.Hub.Browser.isMobile ? 10 : 50)
+    },
+    tex2jax: {
+        inlineMath: [ ["$", "$"], ["\\(","\\)"] ],
+        processEscapes: true,
+        ignoreClass: "tex2jax_ignore|dno",
+        skipTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code']
+    },
+    TeX: {
+        equationNumbers: { autoNumber: "AMS" },
+        noUndefined: { attributes: { mathcolor: "red", mathbackground: "#FFEEEE", mathsize: "90%" } },
+        Macros: { href: "{}" }
+    },
+    messageStyle: "none"
+    });
+</script>
+<!-- 给MathJax元素添加has-jax class -->
+<script type="text/x-mathjax-config">
+    MathJax.Hub.Queue(function() {
+        var all = MathJax.Hub.getAllJax(), i;
+        for(i=0; i < all.length; i += 1) {
+            all[i].SourceElement().parentNode.className += ' has-jax';
+        }
+    });
+</script>
+<!-- 通过连接CDN加载MathJax的js代码 -->
+<script type="text/javascript" async src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML">
+</script>
+
+
+        
+    
+
+
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">DingZhi&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">DingZhi&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?3c2cb6a51b306a50c53ae432e39de395";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">LeetCode刷题（二） | 位运算的骚操作</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Ding Zhi</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">August 16, 2019&nbsp;&nbsp;18:00:51</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/数据结构/">数据结构</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><blockquote class="pullquote left"><p>一个引例：怎样最快的把 2 变成 8 。答案并不是 2×4 。由于计算机是二进制工作的，2 的二进制代码为 0000 0010 而 8 的二进制代码为 0000 0100。 最简单的方式便是把 1 向左边移动一个单位，即位运算。</p>
+</blockquote>
+<p>最近在知乎上看到了一个关于位运算的话题，我便一时兴起对位运算有关的算法技巧进行了整理。位操作是一种很底层的操作二进制数据的方法。我们先介绍其在程序中的奇技淫巧的应用，最后根据几道LeetCode的算法题来总结升华。此外，位运算(Bit Manipulation)一直是程序员面试中的一个必须准备的主题， 不过现在面试中位运算出现的次数并不多，主要原因还是位运算太考察技巧了，很多时候很难在面试的短时间内想出来，所以作为面试的题目显得有点太花时间了。位运算的主要思想是五种运算：<strong>与(&amp;)，或(|)，异或(^)，左移(&lt;&lt;)，右移(&gt;&gt;)。</strong>位运算的常用技巧可叙述如下：</p>
+<ul>
+<li><strong>n &amp;（n-1）能够消灭n中最右侧的一个1。</strong></li>
+<li><strong>右移：除以2， 左移：乘以2。</strong></li>
+<li><strong>异或性质：交换律，0^a=a, a^a=0;</strong></li>
+</ul>
+<p>这些性质看起来都很简单，我们在C语言课程中都接触过，但是当位运算与算法结合，就会有一系列奇妙的应用。我们先来看几个十分典型的例子，再来看对应的LeetCode习题。</p>
+<h2 id="位运算的奇技淫巧"><a href="#位运算的奇技淫巧" class="headerlink" title="位运算的奇技淫巧"></a>位运算的奇技淫巧</h2><h3 id="判断奇偶数"><a href="#判断奇偶数" class="headerlink" title="判断奇偶数"></a>判断奇偶数</h3><p>判断一个数是基于还是偶数，相信很多人都做过，一般的做法的代码如下</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>( n % <span class="number">2</span>) == <span class="number">1</span>&#123;</span><br><span class="line">    <span class="comment">// n 是个奇数</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果把 n 以二进制的形式展示的话，其实我们只需要判断最后一个二进制位是 1 还是 0 就行了，如果是 1 的话，代表是奇数，如果是 0 则代表是偶数，所以采用位运算的方式的话，代码如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(n &amp; <span class="number">1</span> == <span class="number">1</span>)&#123;</span><br><span class="line">    <span class="comment">// n 是个奇数。</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>值得指出的是，当我们写成 n % 2 的形式，一部分编译器也会自动帮我们优化成位运算。这种运算效率高于之前的n%2的形式。</p>
+<h3 id="变换符号"><a href="#变换符号" class="headerlink" title="变换符号"></a>变换符号</h3><p>变换符号显然很简单，根据类似补码的知识，对原数取反加一就可以了。不再赘述。</p>
+<h3 id="两数交换"><a href="#两数交换" class="headerlink" title="两数交换"></a>两数交换</h3><p>交换两个数相信很多人在接触C语言时就写过，教科书上的思路是使用一个额外来变量来辅助交换，例如，我们要交换 x 与 y 值，传统代码如下：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">int tmp = x;</span><br><span class="line">x = y;</span><br><span class="line">y = tmp;</span><br></pre></td></tr></table></figure>
+
+<p>这样写有问题吗？没问题，通俗易懂，万一哪天有人要为难你，<strong>不允许你使用额外的辅助变量来完成交换呢？</strong>你还别说，有人面试确实被问过，这个时候，位运算大法就来了。代码如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">x = x ^ y   <span class="comment">// （1）</span></span><br><span class="line">y = x ^ y   <span class="comment">// （2）</span></span><br><span class="line">x = x ^ y   <span class="comment">// （3）</span></span><br></pre></td></tr></table></figure>
+
+<p>只要三个 x ^ y，就莫名交换成功了。简单解释如下：我们知道，两个相同的数<strong>异或</strong>之后结果会等于 0，即 n ^ n = 0。并且任何数与 0 异或等于它本身，即 n ^ 0 = n。所以，解释如下：</p>
+<p>把（1）中的 x 带入 （2）中的 x，有</p>
+<p>y = x^y = (x^y)^y = x^(y^y) = x^0 = x。 x 的值成功赋给了 y。</p>
+<p>对于（3）,推导如下：</p>
+<p>x = x^y = (x^y)^x = (x^x)^y = 0^y = y。</p>
+<blockquote>
+<p>这里补充说明一下，异或运算是支持运算的<strong>交换律和结合律</strong>的。</p>
+</blockquote>
+<h3 id="找出没有重复的数"><a href="#找出没有重复的数" class="headerlink" title="找出没有重复的数"></a>找出没有重复的数</h3><blockquote class="pullquote right"><p>有一组整型数据，其中有一个数只出现了一次，其他的数都出现了两次，设计算法找出这个数 。</p>
+</blockquote>
+<p>教科书式的思路是用一个哈希表来存储，每次存储的时候，记录某个数出现的次数，最后再遍历哈希表，看看哪个数只出现了一次。这种方法的时间复杂度为 O(n)，空间复杂度也为 O(n)了。然而这道题也是可以采用位运算来处理的。不难知道，两个相同的数异或的结果是 0，一个数和 0 异或的结果是它本身，所以我们把这一组整型全部异或一下，例如这组数据是：1， 2， 3， 4， 5， 1， 2， 3， 4。其中 5 只出现了一次，其他都出现了两次，由于异或支持交换律和结合律，所以把他们全部异或一下，结果如下：1^2^3^4^5^1^2^3^4 = （1^1)^(2^2)^(3^3)^(4^4)^5= 0^0^0^0^5 = 5。也就是说，那些出现了两次的数异或之后会变成0，那个出现一次的数，和 0 异或之后就等于它本身。这个解法对应代码如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">find</span><span class="params">(<span class="keyword">int</span>[] arr)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> tmp = arr[<span class="number">0</span>];</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">1</span>;i &lt; arr.length; i++)&#123;</span><br><span class="line">        tmp = tmp ^ arr[i];</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> tmp;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>时间复杂度为 O(n)，空间复杂度为 O(1)。</p>
+<h3 id="不借助pow函数计算乘方"><a href="#不借助pow函数计算乘方" class="headerlink" title="不借助pow函数计算乘方"></a>不借助pow函数计算乘方</h3><p>例如求解 3 的 n 次方，并且不能使用系统自带的 pow 函数，你会怎么做呢？题目与 LeetCode 上231号题：2 的幂有异曲同工之妙：给定一个整数，编写一个函数来判断它是否是 2 的幂次方。回到这道题目上来，也许你会让连续 n 个 3 相乘。不过这样做时间复杂度为 O(n) ，如果用位运算来做，又会怎么样呢？例如 令n = 13，则 n 的二进制表示为 1101, 那么 3 的 13 次方可以拆解为:3^1101 = 3^0001 * 3^0100 * 3^1000。也就是说我们可以通过 &amp; 1和 &gt;&gt;1 来逐位读取 1101，为1时将该位代表的乘数累乘到最终结果。代码如下，时间复杂度优化为 O(logn)。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">pow</span><span class="params">(<span class="keyword">int</span> n)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> sum = <span class="number">1</span>;</span><br><span class="line">    <span class="keyword">int</span> tmp = <span class="number">3</span>;</span><br><span class="line">    <span class="keyword">while</span>(n != <span class="number">0</span>)&#123;</span><br><span class="line">        <span class="keyword">if</span>(n &amp; <span class="number">1</span> == <span class="number">1</span>)&#123;</span><br><span class="line">            sum *= tmp;</span><br><span class="line">        &#125;</span><br><span class="line">        tmp *= tmp;</span><br><span class="line">        n = n &gt;&gt; <span class="number">1</span>;</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">return</span> sum;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>我们已经看出，位运算很多情况下都与二进制密切相关，所以我们要判断是否位运算，很多情况下都会把他们拆分成二进制，观察特性，或者就是利用<strong>与，或，异或</strong>的特性来观察，总之，多看一些例子并多动手，就比较容易上手了。</p>
+</blockquote>
+<h3 id="找出不大于N的最大的2的幂指数"><a href="#找出不大于N的最大的2的幂指数" class="headerlink" title="找出不大于N的最大的2的幂指数"></a>找出不大于N的最大的2的幂指数</h3><p>传统的做法就是让 1 不断着乘以 2，代码如下：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">findN</span><span class="params">(<span class="keyword">int</span> N)</span></span>&#123;</span><br><span class="line">    <span class="keyword">int</span> sum = <span class="number">1</span>;</span><br><span class="line">   <span class="keyword">while</span>(<span class="literal">true</span>)&#123;</span><br><span class="line">        <span class="keyword">if</span>(sum * <span class="number">2</span> &gt; N)&#123;</span><br><span class="line">            <span class="keyword">return</span> sum;</span><br><span class="line">        &#125;</span><br><span class="line">        sum = sum * <span class="number">2</span>;</span><br><span class="line">   &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这样做时间复杂度是 O(logn)，如果改成位运算呢？如果要使用位运算，很多时候我们把某个数拆成二进制，然后看看有哪些发现。例如令 N = 19，那么转换成二进制就是 00010011。不难看出，我们要找的数就是，把二进制中<strong>最左边的 1 保留，后面的 1 全部变为 0</strong>。即我们的目标数是 00010000。问题就变成了如何获得这个数。相应解法为：首先找到最左边的 1，然后把它右边的所有 0 变成 1；其次把得到的数值加 1，可以得到 00100000即 00011111 + 1 = 00100000；最后把得到的 00100000 向右移动一位，即可得到 00010000，即 00100000 &gt;&gt; 1 = 00010000。找到了思路，新的问题来了，第一步中把最左边 1 中后面的 0 转化为 1 该怎么处理呢？我们来看代码：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">n |= n &gt;&gt; <span class="number">1</span>;</span><br><span class="line">n |= n &gt;&gt; <span class="number">2</span>;</span><br><span class="line">n |= n &gt;&gt; <span class="number">4</span>;</span><br></pre></td></tr></table></figure>
+
+<p>就是通过把 n 右移并且做<strong>或</strong>运算即可得到。例如：我们假设最左边的 1 处于二进制位中的第 k 位(从左往右数),那么把 n 右移一位之后，那么得到的结果中第 k+1 位也必定为 1,然后把 n 与右移后的结果做或运算，那么得到的结果中第 k 和 第 k + 1 位必定是 1;同样的道理，再次把 n 右移两位，那么得到的结果中第 k+2和第 k+3 位必定是 1,然后再次做或运算，那么就能得到第 k, k+1, k+2, k+3 都是 1，如此往复下去….最终的代码如下</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">findN</span><span class="params">(<span class="keyword">int</span> n)</span></span>&#123;</span><br><span class="line">    n |= n &gt;&gt; <span class="number">1</span>;</span><br><span class="line">    n |= n &gt;&gt; <span class="number">2</span>;</span><br><span class="line">    n |= n &gt;&gt; <span class="number">4</span>;</span><br><span class="line">    n |= n &gt;&gt; <span class="number">8</span> <span class="comment">// 整型一般是 32 位，上面我是假设 8 位。</span></span><br><span class="line">    <span class="keyword">return</span> (n + <span class="number">1</span>) &gt;&gt; <span class="number">1</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>这种做法的时间复杂度近似 O(1)。</p>
+<h3 id="n-皇后问题的再探讨"><a href="#n-皇后问题的再探讨" class="headerlink" title="n 皇后问题的再探讨"></a>n 皇后问题的再探讨</h3><p>这一部分我主要学习了一篇知乎文章：<a href="https://zhuanlan.zhihu.com/p/22846106" target="_blank" rel="noopener">用位运算速解 n 皇后问题</a>，受篇幅所限，这里不重复搬运这篇文章，有兴趣的读者可以通过链接进入这篇文章进行阅读。在这个案例中，作者介绍了n皇后问题的五种越来越快的解法。 位运算对提高速度起了关键作用。</p>
+<blockquote>
+<p>下面我们来看几个LeetCode中的位运算题目。</p>
+</blockquote>
+<h2 id="LeetCode习题-位运算之数学运算与位运算"><a href="#LeetCode习题-位运算之数学运算与位运算" class="headerlink" title="LeetCode习题 | 位运算之数学运算与位运算"></a>LeetCode习题 | 位运算之数学运算与位运算</h2><h3 id="29-Divide-Two-Integers"><a href="#29-Divide-Two-Integers" class="headerlink" title="29.Divide Two Integers"></a>29.Divide Two Integers</h3><p>Divide two integers without using multiplication, division and mod operator.If it is overflow, return MAX_INT.</p>
+<p>题目要求：这道题让我们求两数相除，而且规定我们不能用乘法，除法和取余操作。</p>
+<h4 id="不借助位运算的解法"><a href="#不借助位运算的解法" class="headerlink" title="不借助位运算的解法"></a>不借助位运算的解法</h4><p>题目分析：使用减法和ln函数。。就是$e^{(lna-lnb)}=e^{ln(a/b)}= a/b$.似乎也符合题目要求</p>
+<p>题目解答：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">divide</span><span class="params">(<span class="keyword">int</span> dividend, <span class="keyword">int</span> divisor)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">if</span>(divisor == <span class="number">0</span> || dividend == INT_MIN &amp;&amp; divisor == <span class="number">-1</span>) <span class="keyword">return</span> INT_MAX;</span><br><span class="line">        <span class="keyword">int</span> sign = ((dividend &gt;&gt; <span class="number">31</span>) ^ (divisor &gt;&gt; <span class="number">31</span>)) == <span class="number">0</span> ? <span class="number">1</span> : <span class="number">-1</span>;</span><br><span class="line">        <span class="keyword">long</span> a = <span class="built_in">abs</span>((<span class="keyword">long</span>)dividend);</span><br><span class="line">        <span class="keyword">long</span> b = <span class="built_in">abs</span>((<span class="keyword">long</span>)divisor);</span><br><span class="line">        <span class="keyword">double</span> c = <span class="built_in">exp</span>(<span class="built_in">log</span>(a) - <span class="built_in">log</span>(b)) + <span class="number">0.0000000001</span>;</span><br><span class="line">        <span class="keyword">return</span> (<span class="keyword">int</span>)(sign * c);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h4 id="借助位运算的解法"><a href="#借助位运算的解法" class="headerlink" title="借助位运算的解法"></a>借助位运算的解法</h4><p>题目分析：上面的解法多少有些投机取巧的嫌疑，下面我们借助位操作，如果被除数大于或等于除数，则进行如下循环，定义变量m等于除数，定义计数n，当m的两倍小于等于被除数时，进行如下循环，m扩大一倍，n扩大一倍，然后更新res和dvd。然后我们还要根据被除数和除数的正负来确定返回值的正负，这里我们采用长整型long long来完成所有的计算，最后返回值乘以符号即可。</p>
+<p>题目解答：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">divide</span><span class="params">(<span class="keyword">int</span> dividend, <span class="keyword">int</span> divisor)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">long</span> <span class="keyword">long</span> dvd = <span class="built_in">abs</span>((<span class="keyword">long</span> <span class="keyword">long</span>)dividend), dvs = <span class="built_in">abs</span>((<span class="keyword">long</span> <span class="keyword">long</span>)divisor), res = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">if</span> (dvd &lt; dvs) <span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span>(dvd &gt;= dvs)&#123;</span><br><span class="line">            <span class="keyword">long</span> <span class="keyword">long</span> m = dvs, n = <span class="number">1</span>;</span><br><span class="line">            <span class="keyword">while</span>(dvd &gt; (m &lt;&lt; <span class="number">1</span>))&#123;</span><br><span class="line">                m &lt;&lt;= <span class="number">1</span>;</span><br><span class="line">                n &lt;&lt;= <span class="number">1</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            res += n;</span><br><span class="line">            dvd -= m;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">if</span>((dividend &lt; <span class="number">0</span>)^(divisor &lt; <span class="number">0</span>)) res = -res;</span><br><span class="line">        <span class="keyword">return</span> res &gt; INT_MAX ? INT_MAX : res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h3 id="201-Bitwise-AND-of-Numbers-Range"><a href="#201-Bitwise-AND-of-Numbers-Range" class="headerlink" title="201.Bitwise AND of Numbers Range"></a>201.Bitwise AND of Numbers Range</h3><p>Given a range [m, n] where 0 &lt;= m &lt;= n &lt;= 2147483647, return the bitwise AND of all numbers in this range, inclusive.For example, given the range [5, 7], you should return 4</p>
+<p>题目要求：给一个范围，返回这个范围中所有的数按位相与最后的结果。</p>
+<p>题目分析：直觉上我们需要对所有的[m,n]范围内的数字进行遍历。其实并不需要这样，考虑到数组的数字是连续的，那么m，n范围内的二进制表示的末尾相同位置一定会出现不同的0,1。只要找出m，n的左边起的最长相同的二进制头部即可。</p>
+<p>题目解答：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">rangeBitwiseAnd</span><span class="params">(<span class="keyword">int</span> m, <span class="keyword">int</span> n)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> res = <span class="number">0</span>, i = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span>(m != n)&#123;</span><br><span class="line">            m &gt;&gt;= <span class="number">1</span>;</span><br><span class="line">            n &gt;&gt;= <span class="number">1</span>;</span><br><span class="line">            i++;</span><br><span class="line">        &#125;</span><br><span class="line">        res = m &lt;&lt; i;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h3 id="371-Sum-of-Two-Integers"><a href="#371-Sum-of-Two-Integers" class="headerlink" title="371.Sum of Two Integers"></a>371.Sum of Two Integers</h3><p>Calculate the sum of two integers a and b, but you are not allowed to use the operator + and -. Example:Given a = 1 and b = 2, return 3.</p>
+<p>题目要求：实现两数相加，但是不能用加号或者其他什么数学运算符号。</p>
+<p>题目分析：借助位运算。首先，已知异或（就是这个“^”符号）可以得到：<br>0^0 = 0；0^1 = 1；1^1 = 0<br>正是位相加时该位的结果（只不过还有个进位没加罢了），所以对于还没有加进位的result，result可以暂时等于a^b。其次，已知与运算（就是这个“&amp;”符号）可以得到：0&amp;0 = 0；0&amp;1 = 0；1&amp;1 = 1。正是位相加时候有进位的那一位标注为了1，但是进位是往前一个位相加上去的呀。，所以carry = (a &amp; b) &lt;&lt; 1。现在处理要把result加上进位的事情：如果进位carry等于0，那么不用加，直接等于result的值就好了。如果进位不等于0，那么就要把result和carry的值按位相加。按位相加的结果也可能导致进位，所以先用个临时变量temp把carry的值保存，然后令carry = (result &amp; temp) &lt;&lt; 1（也就是result和原来carry按位相加后进位的结果），然后result = result ^ temp（也就是result和原来carry按位相加的结果），不断循环往复，直到有一次carry等于0，不再需要进位了。</p>
+<p>题目解答：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">getSum</span><span class="params">(<span class="keyword">int</span> a, <span class="keyword">int</span> b)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> carry = (a &amp; b) &lt;&lt; <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">int</span> result = (a ^ b);</span><br><span class="line">        <span class="keyword">while</span>(carry != <span class="number">0</span>) &#123;</span><br><span class="line">            <span class="keyword">int</span> temp = carry;</span><br><span class="line">            carry = (result &amp; temp) &lt;&lt; <span class="number">1</span>;</span><br><span class="line">            result = result ^ temp;</span><br><span class="line">        &#125;;</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h3 id="318-Maximum-Product-of-Word-Lengths"><a href="#318-Maximum-Product-of-Word-Lengths" class="headerlink" title="318.Maximum Product of Word Lengths"></a>318.Maximum Product of Word Lengths</h3><p>Given a string array words, find the maximum value of length(word[i]) * length(word[j]) where the two words do not share common letters. You may assume that each word will contain only lower case letters. If no such two words exist, return 0.</p>
+<blockquote>
+<p>Example 1:<br>Given [“abcw”, “baz”, “foo”, “bar”, “xtfn”, “abcdef”]<br>Return 16<br>The two words can be “abcw”, “xtfn”.<br>Example 2:<br>Given [“a”, “ab”, “abc”, “d”, “cd”, “bcd”, “abcd”]<br>Return 4<br>The two words can be “ab”, “cd”.<br>Example 3:<br>Given [“a”, “aa”, “aaa”, “aaaa”]<br>Return 0<br>No such pair of words.</p>
+</blockquote>
+<p>题目要求：给我们一个单词数组，求两个没有相同字母的单词的长度之积的最大值。</p>
+<p>题目分析：网上的解法大多用了mask，因为题目中说都是小写字母，那么只有26位，一个整型数int有32位，我们可以用后26位来对应26个字母，若为1，说明该对应位置的字母出现过，那么每个单词的都可由一个int数字表示，两个单词没有共同字母的条件是这两个int数相与为0。</p>
+<p>题目解答：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">maxProduct</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="built_in">string</span>&gt;&amp; words)</span> </span>&#123;</span><br><span class="line">        <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; v(words.size());</span><br><span class="line">        <span class="keyword">int</span> result = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; words.size(); i++)</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> j = <span class="number">0</span>; j &lt; words[i].length(); j++)</span><br><span class="line">                v[i] = v[i] | <span class="number">1</span> &lt;&lt; (words[i][j] - <span class="string">'a'</span>);</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; words.size(); i++)</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">int</span> j = i + <span class="number">1</span>; j &lt; words.size(); j++)</span><br><span class="line">                <span class="keyword">if</span>((v[i] &amp; v[j]) == <span class="number">0</span>)</span><br><span class="line">                    result = max(result, (<span class="keyword">int</span>)(words[i].length() * words[j].length()));</span><br><span class="line">        <span class="keyword">return</span> result;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>下面再看两道题，与前面的数学运算案例不同，前面的数学运算案例没有明显要求使用位运算的痕迹，而这里的题目明显可以看出需要使用位运算解决。</p>
+<h3 id="190-Reverse-Bits"><a href="#190-Reverse-Bits" class="headerlink" title="190.Reverse Bits"></a>190.Reverse Bits</h3><p>Reverse bits of a given 32 bits unsigned integer.For example, given input 43261596 (represented in binary as 00000010100101000001111010011100), return 964176192 (represented in binary as00111001011110000010100101000000).</p>
+<p>题目要求：把一个无符号int数字，按二进制位反转过来。</p>
+<p>题目分析：通过移位操作，一位一位来处理。目的是反转，所以先处理最右位。最右位（末端）一个一个地往res的左边推。</p>
+<p>题目解答：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="keyword">uint32_t</span> reverseBits(<span class="keyword">uint32_t</span> n) &#123;</span><br><span class="line">        <span class="keyword">uint32_t</span> res = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">32</span>; i++)&#123;</span><br><span class="line">            <span class="keyword">uint32_t</span> temp = (n&gt;&gt;i) &amp; <span class="number">1</span>;</span><br><span class="line">            res |= (temp&lt;&lt;(<span class="number">31</span>-i));</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h3 id="476-Number-Complement"><a href="#476-Number-Complement" class="headerlink" title="476.Number Complement"></a>476.Number Complement</h3><p>Given a positive integer, output its complement number. The complement strategy is to flip the bits of its binary representation.</p>
+<p>题目要求：给一个正整数，输出其补码数。 补码策略是反转其二进制表示的位。</p>
+<p>题目分析：mask – 1为和num二进制位等长的所有位数为1的数，与num取^可以得到和num相反的数字。</p>
+<p>题目解答：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">findComplement</span><span class="params">(<span class="keyword">int</span> num)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> temp = num, mask = <span class="number">1</span>;</span><br><span class="line">        <span class="keyword">while</span>(temp != <span class="number">0</span>) &#123;</span><br><span class="line">            temp = temp &gt;&gt; <span class="number">1</span>;</span><br><span class="line">            mask = mask &lt;&lt; <span class="number">1</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> num ^ (mask - <span class="number">1</span>);</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h2 id="LeetCode习题-位运算之Single-Number系列"><a href="#LeetCode习题-位运算之Single-Number系列" class="headerlink" title="LeetCode习题 | 位运算之Single Number系列"></a>LeetCode习题 | 位运算之Single Number系列</h2><h3 id="136-Single-Number"><a href="#136-Single-Number" class="headerlink" title="136.Single Number"></a>136.Single Number</h3><p>Given an array of integers, every element appears twice except for one. Find that single one.Note:Your algorithm should have a linear runtime complexity. Could you implement it without using extra memory?</p>
+<p>题目要求：给定一个整数数组，除了一个元素出现1次外，其他每个元素都会出现2次。 找到那个出现1次的整数。注意：时间复杂度必须是O(n)，并且空间复杂度为O(1)</p>
+<p>题目分析：由于题目对时间复杂度和空间复杂度有严格要求，因此不能使用sort排序方法，也不能使用map结构，只能另辟蹊径。把数组中所有的数字都异或起来，则每对相同的数字都会得0，然后最后剩下来的数字就是那个只有1次的数字。</p>
+<p>题目解答：略，参见前文案例中代码</p>
+<h3 id="137-Single-Number-II"><a href="#137-Single-Number-II" class="headerlink" title="137.Single Number II"></a>137.Single Number II</h3><p>Given an array of integers, every element appears three times except for one. Find that single one.</p>
+<p>Note: Your algorithm should have a linear runtime complexity. Could you implement it without using extra memory?</p>
+<p>题目要求：给定一个整数数组，除了一个元素出现3次外，其他每个元素都会出现2次。 找到那个出现3次的整数。注意：时间复杂度必须是O(n)，并且空间复杂度为O(1)</p>
+<p>题目分析：仿效前文的mask方法，我们可以建立一个32位的数字，来统计每一位上数字出现的个数，最后我们把每个数的对应位都加起来对3取余，最终剩下来的那个数就是单独的数字。</p>
+<p>题目解答：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">singleNumber</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&amp; nums)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> res = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">32</span>; i++)&#123;</span><br><span class="line">            <span class="keyword">int</span> temp = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">auto</span> n : nums)&#123;</span><br><span class="line">                temp += (n&gt;&gt;i) &amp; <span class="number">1</span>;</span><br><span class="line">            &#125;</span><br><span class="line">            temp %= <span class="number">3</span>;</span><br><span class="line">            res |= (temp&lt;&lt;i);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h3 id="260-Single-Number-III"><a href="#260-Single-Number-III" class="headerlink" title="260.Single Number III"></a>260.Single Number III</h3><p>Given an array of numbers nums, in which exactly two elements appear only once and all the other elements appear exactly twice. Find the two elements that appear only once.</p>
+<p>For example: Given nums = [1, 2, 1, 3, 2, 5], return [3, 5].</p>
+<p>Note: The order of the result is not important. So in the above example, [5, 3] is also correct. Your algorithm should run in linear runtime complexity. Could you implement it using only constant space complexity?</p>
+<p>题目要求：给定一个整数数组，除了两个元素各出现1次外，其他每个元素都会出现2次。 找到那两个出现1次的整数。</p>
+<p>题目分析：我们先把原数组全部异或起来，得到一个数字，这个数字是两个不相同的数字异或的结果，我们取出其中任意一位为‘1’的位，为了方便起见，我们用 temp^(temp&amp;(temp-1)) 来取出最右端为‘1’的位，然后和原数组中的数字挨个相与，那么我们要求的两个不同的数字就被分到了两个小组中，分别将两个小组中的数字都异或起来，就可以得到最终结果了。</p>
+<p>题目解答：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; singleNumber(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&amp; nums) &#123;</span><br><span class="line">        <span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt; res(<span class="number">2</span>, <span class="number">0</span>);</span><br><span class="line">        <span class="keyword">int</span> temp = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">auto</span> n : nums)&#123;</span><br><span class="line">            temp ^= n;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">int</span> flag = temp^(temp&amp;(temp<span class="number">-1</span>));</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">auto</span> n : nums)&#123;</span><br><span class="line">            <span class="keyword">if</span>(flag &amp; n) res[<span class="number">0</span>] ^= n;</span><br><span class="line">            <span class="keyword">else</span> res[<span class="number">1</span>] ^= n;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h2 id="LeetCode习题-位运算之Hamming-weight系列"><a href="#LeetCode习题-位运算之Hamming-weight系列" class="headerlink" title="LeetCode习题 | 位运算之Hamming weight系列"></a>LeetCode习题 | 位运算之Hamming weight系列</h2><h3 id="191-Number-of-1-Bits"><a href="#191-Number-of-1-Bits" class="headerlink" title="191.Number of 1 Bits"></a>191.Number of 1 Bits</h3><p>Write a function that takes an unsigned integer and returns the number of ’1’ bits it has (also known as the Hamming weight). For example, the 32-bit integer ’11’ has binary representation 00000000000000000000000000001011, so the function should return 3.</p>
+<p>题目要求：编写一个函数，输入是一个无符号整数，返回其二进制表达式中数字位数为 ‘1’ 的个数（也被称为汉明重量）。</p>
+<p>题目分析：当然，可以利用for循环，统计整数二进制表达式32位中1的个数；但是，有一种更高效的方法：使用n&amp;(n-1)的方法，去除bit位的最后1个1，发现有几个1，就循环几次n&amp;(n-1)，直到n等于0。</p>
+<p>题目解答：</p>
+<h4 id="位运算版解法"><a href="#位运算版解法" class="headerlink" title="位运算版解法"></a>位运算版解法</h4><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">hammingWeight</span><span class="params">(<span class="keyword">uint32_t</span> n)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> res = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span>(n)&#123;</span><br><span class="line">            res++;</span><br><span class="line">            n = n &amp; (n<span class="number">-1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h4 id="不借助位运算的解法-1"><a href="#不借助位运算的解法-1" class="headerlink" title="不借助位运算的解法"></a>不借助位运算的解法</h4><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">hammingWeight</span><span class="params">(<span class="keyword">uint32_t</span> n)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> ans = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">while</span>(n != <span class="number">0</span>) &#123;</span><br><span class="line">            ans = ans + n % <span class="number">2</span>;</span><br><span class="line">            n = n / <span class="number">2</span>;</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> ans;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h3 id="461-Hamming-Distance"><a href="#461-Hamming-Distance" class="headerlink" title="461.Hamming Distance"></a>461.Hamming Distance</h3><p>The Hamming distance between two integers is the number of positions at which the corresponding bits are different. Given two integers x and y, calculate the Hamming distance.</p>
+<p>Note: 0 ≤ x, y &lt; 2^31.</p>
+<p>Example: Input: x = 1, y = 4 Output: 2</p>
+<p>Explanation:<br>1 (0 0 0 1)<br>4 (0 1 0 0)<br>↑ ↑The above arrows point to positions where the corresponding bits are different.</p>
+<p>题目要求：求两个数字之间的汉明距离，即两个数二进制数对应位不同的个数。</p>
+<p>题目分析：将两个数字异或，遍历异或结果的每一位，统计为1的个数。</p>
+<p>题目解答：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">hammingDistance</span><span class="params">(<span class="keyword">int</span> x, <span class="keyword">int</span> y)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> res = <span class="number">0</span>, temp = x ^ y;</span><br><span class="line">        <span class="keyword">while</span>(temp)&#123;</span><br><span class="line">            res++;</span><br><span class="line">            temp = temp &amp; (temp<span class="number">-1</span>);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h3 id="477-Total-Hamming-Distance"><a href="#477-Total-Hamming-Distance" class="headerlink" title="477.Total Hamming Distance"></a>477.Total Hamming Distance</h3><p>The Hamming distance between two integers is the number of positions at which the corresponding bits are different. Now your job is to find the total Hamming distance between all pairs of the given numbers.</p>
+<p>Example: Input: 4, 14, 2 Output: 6</p>
+<p>Explanation: In binary representation, the 4 is 0100, 14 is 1110, and 2 is 0010 (just showing the four bits relevant in this case). So the answer will be: HammingDistance(4, 14) + HammingDistance(4, 2) + HammingDistance(14, 2) = 2 + 2 + 2 = 6.<br>Note: Elements of the given array are in the range of 0 to 10^9. Length of the array will not exceed 10^4.</p>
+<p>题目要求：给定一个int数组，求出数组中所有数值对汉明距离中总和。</p>
+<p>题目分析：对数组中所有数字的同一个bit位，统计这个bit位上出现的1的次数count，那么这个bit位上出现的0的次数n-count，则总的汉明距离为count*(n-count)，n是数组中元素的个数。</p>
+<p>题目解答：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">Solution</span> &#123;</span></span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">    <span class="function"><span class="keyword">int</span> <span class="title">totalHammingDistance</span><span class="params">(<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;&amp; nums)</span> </span>&#123;</span><br><span class="line">        <span class="keyword">int</span> res = <span class="number">0</span>;</span><br><span class="line">        <span class="keyword">for</span>(<span class="keyword">int</span> i = <span class="number">0</span>; i &lt; <span class="number">31</span>; i++)&#123;</span><br><span class="line">            <span class="keyword">int</span> cnt = <span class="number">0</span>;</span><br><span class="line">            <span class="keyword">for</span>(<span class="keyword">auto</span> n : nums)&#123;</span><br><span class="line">                <span class="keyword">if</span>(n &amp; <span class="number">1</span>&lt;&lt;i) cnt++;</span><br><span class="line">            &#125;</span><br><span class="line">            res += cnt * (nums.size() - cnt);</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">return</span> res;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>通过这些题目可以看到，很多位运算可以解决的题目其实不借助位运算也可以得到解决，但是利用位运算的方法不仅开阔了我们的思路，也会提高我们的算法效率。如果面试中遇到能提出位运算的解法也能加分不少，所以位运算的思想值得我们好好掌握。 </p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Ding Zhi</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://dingzhi.ga/articles/leetcode-2/">http://dingzhi.ga/articles/leetcode-2/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Attribution-NonCommercial-NoDerivs 3.0 Unported <a href="https://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh" rel="external nofollow">(CC BY-NC-ND 3.0)</a></span>
+                    </p>
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/数据结构/"># 数据结构</a>
+                    
+                        <a href="/tags/LeetCode/"># LeetCode</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/articles/crawler-1/">网络爬虫学习笔记（一）| 基本库urllib的使用</a>
+            
+            
+            <a class="next" rel="next" href="/articles/numpy/">国外大神制作的超棒NumPy可视化教程</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+
+        </div>
+        <footer id="footer" class="footer">
+    <title>打赏</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!--<script type="text/javascript" src="http://static.tctip.com/tctip-1.0.2.js"></script>-->
+<script type="text/javascript" src="http://dingzhi.ga/js/tctip-1.0.3.min.js"></script>
+<script>
+  new tctip({
+    top: '20%',
+    button: {
+      id: 9,
+      type: 'dashang'
+    },
+    list: [
+      {
+        type: 'alipay',
+        qrImg: 'http://dingzhi.ga/images/alipay.jpg'
+      }, {
+        type: 'wechat',
+        qrImg: 'http://dingzhi.ga/images/wechat.jpg'
+      }
+    ]
+  }).init()
+</script>
+友情链接<span lang="EN-US"> | <a href="http://fenghe.us/" target="_blank">Fenghe's
+Blog |</a>
+<a href="http://www.kamzero.cn" target="_blank">Sherry's
+Blog |</a>
+<span>© Ding Zhi 2019 | All Rights Reserved</span>
+</span></footer>
+    </div>
+</body>
+</html>

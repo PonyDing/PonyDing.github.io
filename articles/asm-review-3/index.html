@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="description" content="Keep learning.">
+
+
+    <meta name="keywords" content="Python,Distributed Computing,AI">
+
+
+<title>汇编语言学习笔记（三）| 六个重要寄存器 | DingZhi&#39;s Blog</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">DingZhi&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">DingZhi&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?3c2cb6a51b306a50c53ae432e39de395";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">汇编语言学习笔记（三）| 六个重要寄存器</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Ding Zhi</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">August 5, 2019&nbsp;&nbsp;5:31:52</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/汇编语言程序设计/">汇编语言程序设计</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h2 id="寄存器们"><a href="#寄存器们" class="headerlink" title="寄存器们"></a>寄存器们</h2><p>这里整理了8086汇编中最重要的六个寄存器，还有几个没有整理啦~</p>
+<h3 id="FL标志寄存器"><a href="#FL标志寄存器" class="headerlink" title="FL标志寄存器"></a>FL标志寄存器</h3><h4 id="CF-进位标志，借位标志"><a href="#CF-进位标志，借位标志" class="headerlink" title="CF    进位标志，借位标志"></a>CF    进位标志，借位标志</h4><p>左移和右移出去的1位会填到CF上，与CF相关的两条跳转指令jc、jnc、clc、stc、cmc</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">clc;使CF=0，clear carry flag</span><br><span class="line">stc;使CF=1，set carry flag</span><br><span class="line">cmc;使CF反转，complement carry flag</span><br><span class="line">jb;jump if below</span><br><span class="line">jc;jump if carry flag</span><br><span class="line">;上述两条指令等价</span><br></pre></td></tr></table></figure>
+
+<p>inc和dec指令不影响CF标志位</p>
+<h4 id="ZF-零标志"><a href="#ZF-零标志" class="headerlink" title="ZF    零标志"></a>ZF    零标志</h4><h4 id="OF-溢出标志"><a href="#OF-溢出标志" class="headerlink" title="OF    溢出标志"></a>OF    溢出标志</h4><p><strong><font color="red">溢出两种情况：正数相加得到负数、负数相加得到正数 </font></strong></p>
+<p><em>注意：8位寄存器加法运算溢出时要把原先运算结果减去100h</em></p>
+<p><strong>溢出标志OF用于反映有符号数加减运算所得结果是否溢出.如果运算结果超过当前运算位数所能表示的范围,则称为溢出,OF的值被置为1,否则,OF的值被清为0.</strong></p>
+<p><code>of是溢出标志位,SF是符号标志位.</code></p>
+<ul>
+<li>如果OF为零,说明没有溢出,那么逻辑上真正的结果的正负等于实际结果的正负.<br>如果SF为1,那么实际结果为负,所以逻辑上真正的结果为负.<br>-45-5=-50</li>
+<li>如果OF为1,说明有溢出,那么逻辑上真正的结果的正负不等于实际结果的正负.<br>如果SF为0,那么实际结果为正,由前面“逻辑上真正的结果的正负不等于实际结果的正负”可知,逻辑上真正的结果应该为负.<br>可得出结论：如果因为溢出导致了实际结果为正,那么逻辑上真正的结果必然为负.<br>十进制 十六进制<br>-45-100=-145<br>mov al,-45 mov al,D3<br>add al,-100 add al,9C<br>al的值应为-145, al的值为 6f(111) ,二进制表示为01101111,<br>8位二进制能表达的数据范围-128至127,of=1 因此,sf=0,因为溢出导致了实际结果为正,</li>
+<li>如果OF为1,说明有溢出,那么逻辑上真正的结果的正负不等于实际结果的正负.<br>如果SF为1,那么实际结果为负,由前面“逻辑上真正的结果的正负不等于实际结果的正负”可知,逻辑上真正的结果应该为正.<br>可得出结论：如果因为溢出导致了实际结果为负,那么逻辑上真正的结果必然为正.<br>十进制 十六进制<br>45+100=145<br>mov al,45 mov al,2d<br>add al,100 add al,64<br>al的值应为145, al的值为 91h ,二进制表示为1001 0001,<br>8位二进制能表达的数据范围-128至127,of=1 因此,sf=1因为溢出导致了实际结果为负<br>0110 1111(111的补码)<br>1001 0000(取反了)<br>1001 0001(加1了,得到-110的补码)即91h</li>
+<li>如果OF为0,说明没有溢出,那么逻辑上真正的结果的正负等于实际结果的正负.<br>如果SF为0,实际结果正,所以逻辑上真正的结果正.</li>
+</ul>
+<h4 id="SF-符号标志"><a href="#SF-符号标志" class="headerlink" title="SF    符号标志"></a>SF    符号标志</h4><p>SF=0（最高位是什么,SF就是什么）</p>
+<h4 id="DF-方向标志"><a href="#DF-方向标志" class="headerlink" title="DF    方向标志"></a>DF    方向标志</h4><table>
+<thead>
+<tr>
+<th align="center">DF=0</th>
+<th align="center">每次操作后si++，di++</th>
+<th align="center">正方向</th>
+<th align="center">源地址&gt;目标地址</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">DF=1</td>
+<td align="center">每次操作后si–，di–</td>
+<td align="center">反方向</td>
+<td align="center">源地址&lt;目标地址</td>
+</tr>
+</tbody></table>
+<h4 id="IF-中断标志"><a href="#IF-中断标志" class="headerlink" title="IF    中断标志"></a>IF    中断标志</h4><p>IF=1，允许中断，否则禁止中断</p>
+<p>cli    sti指令</p>
+
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Ding Zhi</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://dingzhi.ga/articles/asm-review-3/">http://dingzhi.ga/articles/asm-review-3/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Attribution-NonCommercial-NoDerivs 3.0 Unported <a href="https://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh" rel="external nofollow">(CC BY-NC-ND 3.0)</a></span>
+                    </p>
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/Assembly/"># Assembly</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/articles/asm-review-4/">汇编语言学习笔记（四）| 一些细节</a>
+            
+            
+            <a class="next" rel="next" href="/articles/asm-review-2/">汇编语言学习笔记（二）| 指令整理</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+
+        </div>
+        <footer id="footer" class="footer">
+    <title>打赏</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!--<script type="text/javascript" src="http://static.tctip.com/tctip-1.0.2.js"></script>-->
+<script type="text/javascript" src="http://dingzhi.ga/js/tctip-1.0.3.min.js"></script>
+<script>
+  new tctip({
+    top: '20%',
+    button: {
+      id: 9,
+      type: 'dashang'
+    },
+    list: [
+      {
+        type: 'alipay',
+        qrImg: 'http://dingzhi.ga/images/alipay.jpg'
+      }, {
+        type: 'wechat',
+        qrImg: 'http://dingzhi.ga/images/wechat.jpg'
+      }
+    ]
+  }).init()
+</script>
+友情链接<span lang="EN-US"> | <a href="http://fenghe.us/" target="_blank">Fenghe's
+Blog |</a>
+<a href="http://www.kamzero.cn" target="_blank">Sherry's
+Blog |</a>
+<span>© Ding Zhi 2019 | All Rights Reserved</span>
+</span></footer>
+    </div>
+</body>
+</html>

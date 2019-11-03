@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+<meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta name="description" content="Keep learning.">
+
+
+    <meta name="keywords" content="Python,Distributed Computing,AI">
+
+
+<title>C++ STL介绍(二) | map、queue、priority_queue | DingZhi&#39;s Blog</title>
+
+
+
+    <link rel="icon" href="/favicon.ico">
+
+
+
+
+    <!-- stylesheets list from _config.yml -->
+    
+    <link rel="stylesheet" href="/css/style.css">
+    
+
+
+
+    <!-- scripts list from _config.yml -->
+    
+    <script src="/js/script.js"></script>
+    
+    <script src="/js/tocbot.min.js"></script>
+    
+
+
+
+    
+    
+        
+    
+
+
+</head>
+<body>
+    <div class="wrapper">
+        <header>
+    <nav class="navbar">
+        <div class="container">
+            <div class="navbar-header header-logo"><a href="/">DingZhi&#39;s Blog</a></div>
+            <div class="menu navbar-right">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+                <input id="switch_default" type="checkbox" class="switch_default">
+                <label for="switch_default" class="toggleBtn"></label>
+            </div>
+
+        </div>
+    </nav>
+
+    
+    <nav class="navbar-mobile" id="nav-mobile">
+        <div class="container">
+            <div class="navbar-header">
+                <div>
+                    <a href="/">DingZhi&#39;s Blog</a><a id="mobile-toggle-theme">·&nbsp;Light</a>
+                </div>
+                <div class="menu-toggle" onclick="mobileBtn()">&#9776; Menu</div>
+            </div>
+            <div class="menu" id="mobile-menu">
+                
+                    <a class="menu-item" href="/archives">Posts</a>
+                
+                    <a class="menu-item" href="/category">Categories</a>
+                
+                    <a class="menu-item" href="/tag">Tags</a>
+                
+                    <a class="menu-item" href="/about">About</a>
+                
+            </div>
+        </div>
+    </nav>
+
+</header>
+<script>
+    var mobileBtn = function f() {
+        var toggleMenu = document.getElementsByClassName("menu-toggle")[0];
+        var mobileMenu = document.getElementById("mobile-menu");
+        if(toggleMenu.classList.contains("active")){
+           toggleMenu.classList.remove("active")
+            mobileMenu.classList.remove("active")
+        }else{
+            toggleMenu.classList.add("active")
+            mobileMenu.classList.add("active")
+        }
+    }
+</script>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?3c2cb6a51b306a50c53ae432e39de395";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+</script>
+        <div class="main">
+            <div class="container">
+    
+    
+        <div class="post-toc">
+    <div class="tocbot-list">
+    </div>
+    <div class="tocbot-list-menu">
+        <a class="tocbot-toc-expand" onclick="expand_toc()">Expand all</a>
+        <a onclick="go_top()">Back to top</a>
+        <a onclick="go_bottom()">Go to bottom</a>
+    </div>
+</div>
+
+<script>
+    document.ready(
+        function () {
+            tocbot.init({
+                tocSelector: '.tocbot-list',
+                contentSelector: '.post-content',
+                headingSelector: 'h1, h2, h3, h4, h5',
+                collapseDepth: 1,
+                orderedList: false,
+                scrollSmooth: true,
+            })
+        }
+    )
+
+    function expand_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 6,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "collapse_toc()");
+        b.innerHTML = "Collapse all"
+    }
+
+    function collapse_toc() {
+        var b = document.querySelector(".tocbot-toc-expand");
+        tocbot.init({
+            tocSelector: '.tocbot-list',
+            contentSelector: '.post-content',
+            headingSelector: 'h1, h2, h3, h4, h5',
+            collapseDepth: 1,
+            orderedList: false,
+            scrollSmooth: true,
+        });
+        b.setAttribute("onclick", "expand_toc()");
+        b.innerHTML = "Expand all"
+    }
+
+    function go_top() {
+        window.scrollTo(0, 0);
+    }
+
+    function go_bottom() {
+        window.scrollTo(0, document.body.scrollHeight);
+    }
+
+</script>
+    
+
+    
+    
+    <article class="post-wrap">
+        <header class="post-header">
+            <h1 class="post-title">C++ STL介绍(二) | map、queue、priority_queue</h1>
+            
+                <div class="post-meta">
+                    
+                        Author: <a itemprop="author" rel="author" href="/">Ding Zhi</a>
+                    
+
+                    
+                        <span class="post-time">
+                        Date: <a href="#">September 22, 2019&nbsp;&nbsp;17:31:03</a>
+                        </span>
+                    
+                    
+                        <span class="post-category">
+                    Category:
+                            
+                                <a href="/categories/面向对象程序设计/">面向对象程序设计</a>
+                            
+                        </span>
+                    
+                </div>
+            
+        </header>
+
+        <div class="post-content">
+            <h2 id="map-（需-include-lt-map-gt-）"><a href="#map-（需-include-lt-map-gt-）" class="headerlink" title="map    （需#include&lt;map&gt;）"></a>map    （需<code>#include&lt;map&gt;</code>）</h2><p><code>map</code>可以将任何基本类型（包括STL容器）映射到任何基本类型（包括STL容器）。</p>
+<blockquote>
+<p>看这样一个场景：需要判断给定的数字在某个文件中是否出现过，按照正常思路可以开一个bool类型的哈希表，但是如果这些数字很大（例如上千位），那么我们就难以开数组。这时我们就可以用map，把数字看做string，建立string到int的映射（或者直接int到int映射）</p>
+</blockquote>
+<h3 id="map的定义"><a href="#map的定义" class="headerlink" title="map的定义"></a>map的定义</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">map</span>&lt;typename1,typename2&gt; mp;</span><br></pre></td></tr></table></figure>
+
+<p>注意，如果是字符串到整型的映射，必须是<code>map&lt;string,int&gt;</code>不能是<code>map&lt;char[],int&gt;</code>，因为char数组作为数组是不能作为键值的，如果想用字符串映射，必须用string</p>
+<h3 id="map内元素的访问"><a href="#map内元素的访问" class="headerlink" title="map内元素的访问"></a>map内元素的访问</h3><h4 id="通过下标访问"><a href="#通过下标访问" class="headerlink" title="通过下标访问"></a>通过下标访问</h4><p>可以直接访问，例如对于<code>map&lt;char,int&gt;mp</code>,可以直接使用<code>mp[&#39;c&#39;]=20</code>这样的方式访问，但是<strong>map中的键是唯一的</strong>。也就是说，不可能同时存在两个<code>mp[&#39;c&#39;]</code>分别等于两个不同的值，两次对<code>mp[&#39;c&#39;]</code>赋值则会使后一次赋值覆盖前一次的值。</p>
+<blockquote>
+<p>map的键和值唯一对应，如果需要一个键对应多个值，需要使用<code>multimap</code></p>
+</blockquote>
+<h4 id="通过迭代器访问"><a href="#通过迭代器访问" class="headerlink" title="通过迭代器访问"></a>通过迭代器访问</h4><p><code>map&lt;typename1,typename2&gt;::iterator it;</code>定义了map类型迭代器.在使用迭代器时，使用<code>it-&gt;first</code>访问键，使用<code>it-&gt;second</code>访问值。</p>
+<blockquote>
+<p>注意：map会按照<strong>键</strong>从小到大的顺序自动排序。</p>
+</blockquote>
+<h3 id="map常用函数"><a href="#map常用函数" class="headerlink" title="map常用函数"></a>map常用函数</h3><ul>
+<li><p>find()</p>
+<p>用find函数来定位数据出现位置，它返回的一个迭代器，当数据出现时，它返回数据所在位置的迭代器，如果map中没有要查找的数据，它返回的迭代器等于end函数返回的迭代器</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;map&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;string&gt;</span></span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;iostream&gt;</span></span></span><br><span class="line">Using <span class="keyword">namespace</span> <span class="built_in">std</span>;</span><br><span class="line"><span class="function">Int <span class="title">main</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;</span><br><span class="line">       Map&lt;<span class="keyword">int</span>, <span class="built_in">string</span>&gt; mapStudent;</span><br><span class="line">       mapStudent.insert(pair&lt;<span class="keyword">int</span>, <span class="built_in">string</span>&gt;(<span class="number">1</span>, “student_one”));</span><br><span class="line">       mapStudent.insert(pair&lt;<span class="keyword">int</span>, <span class="built_in">string</span>&gt;(<span class="number">2</span>, “student_two”));</span><br><span class="line">       mapStudent.insert(pair&lt;<span class="keyword">int</span>, <span class="built_in">string</span>&gt;(<span class="number">3</span>, “student_three”));</span><br><span class="line">       <span class="built_in">map</span>&lt;<span class="keyword">int</span>, <span class="built_in">string</span>&gt;::iterator iter;</span><br><span class="line">       iter = mapStudent.find(<span class="number">1</span>);</span><br><span class="line"><span class="keyword">if</span>(iter != mapStudent.end())</span><br><span class="line">	&#123;</span><br><span class="line">       Cout&lt;&lt;”Find, the value is ”&lt;&lt;iter-&gt;second&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">	&#125;</span><br><span class="line"><span class="keyword">else</span></span><br><span class="line">	&#123;</span><br><span class="line">       Cout&lt;&lt;”Do <span class="keyword">not</span> Find”&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">	&#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>erase()</p>
+<ul>
+<li><p>删除单个元素</p>
+<ul>
+<li><code>mp.erase(it)</code>，it为需要删除的元素的迭代器，时间复杂度O(1)</li>
+<li><code>mp.erase(key)</code>，key为需要删除的元素的迭代器，时间复杂度O(logN)</li>
+</ul>
+</li>
+<li><p>删除一个区间内所有元素<code>mp.erase(first,last)</code>，first和last均为元素对应的迭代器，这个函数删除<code>[first,last)</code>区间内内的元素</p>
+<blockquote>
+<p>注意：对于迭代器<code>.end()</code>操作，返回的不是最后一个迭代器而是其后面一位。<br>换言之，从<code>map.begin()</code>到<code>map.end()</code>的左闭右开区间其实是整个map而非除去最后一位的map.</p>
+</blockquote>
+</li>
+</ul>
+</li>
+<li><p>size()    获取map中映射对的个数</p>
+</li>
+<li><p>clear()    清空整个map</p>
+</li>
+</ul>
+<h3 id="map的使用场景"><a href="#map的使用场景" class="headerlink" title="map的使用场景"></a>map的使用场景</h3><ul>
+<li>需要建立字符串与整数之间映射时可以用map减少代码量</li>
+<li>判断大整数或者其他特殊类型数据是否存在，可以把map当作bool数组</li>
+<li>字符串和字符串的映射</li>
+</ul>
+<h2 id="queue-（需-include-lt-queue-gt-）"><a href="#queue-（需-include-lt-queue-gt-）" class="headerlink" title="queue    （需#include&lt;queue&gt;）"></a>queue    （需<code>#include&lt;queue&gt;</code>）</h2><h3 id="queue的定义"><a href="#queue的定义" class="headerlink" title="queue的定义"></a>queue的定义</h3><p>queue为队列，先进先出，定义形式为<code>queue&lt;typename&gt; name;</code></p>
+<h3 id="queue容器内元素的访问"><a href="#queue容器内元素的访问" class="headerlink" title="queue容器内元素的访问"></a>queue容器内元素的访问</h3><p>通过<code>front()</code>访问队首元素，通过<code>back()</code>访问队尾元素.</p>
+<blockquote>
+<p>注意：使用front()和back()函数前，必须先用empty()判断队列是否为空，否则可能因为队列为空而产生错误.</p>
+</blockquote>
+<h3 id="queue常用函数实例"><a href="#queue常用函数实例" class="headerlink" title="queue常用函数实例"></a>queue常用函数实例</h3><ul>
+<li>push()    实现新元素x的入队</li>
+<li>pop()    实现队首元素x的出队</li>
+<li>empty()    返回值为布尔类型，若队列为空则返回true，否则为false</li>
+<li>size()    返回queue中元素的个数</li>
+</ul>
+<h3 id="queue的使用场景"><a href="#queue的使用场景" class="headerlink" title="queue的使用场景"></a>queue的使用场景</h3><ul>
+<li>广度优先搜索的实现中使用queue</li>
+</ul>
+<h2 id="priority-queue-（需-include-lt-queue-gt-）"><a href="#priority-queue-（需-include-lt-queue-gt-）" class="headerlink" title="priority_queue    （需#include&lt;queue&gt;）"></a>priority_queue    （需<code>#include&lt;queue&gt;</code>）</h2><p>priority_queue是优先级队列的意思，简单理解就是队列带有了优先级的区分，和平常我们看到的队列queue的区别在于，平时的队列元素没有优先之分，先进来的数据先出去，其底层是用堆来实现的。在优先队列中，<strong>队首元素一定是当前队列中优先级最高的那一个。</strong>在优先队列中，没有 front() 函数与 back() 函数，而<strong>只能通过 top() 函数来访问队首元素</strong>（也可称为堆顶元素），也就是优先级最高的元素。通常情况下，在一些实际的场景中，队列往往有优先级之分，例如这在计算机网络中是非常常见的，举个例子，当一个非常重要的数据进入队列之后，需要快速发出去，就需要让其他数据等待，重要的数据先发出去，这就要求该数据有高于其他数据的优先级标识。而优先级队列也正是这样的原理。</p>
+<h3 id="priority-queue的定义"><a href="#priority-queue的定义" class="headerlink" title="priority_queue的定义"></a>priority_queue的定义</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">priority_queue&lt;<span class="keyword">typename</span>&gt; name;</span><br></pre></td></tr></table></figure>
+
+<h3 id="priority-queue内元素访问"><a href="#priority-queue内元素访问" class="headerlink" title="priority_queue内元素访问"></a>priority_queue内元素访问</h3><p>只能用top()函数访问队首元素（优先级最高的元素）</p>
+<h3 id="常用函数"><a href="#常用函数" class="headerlink" title="常用函数"></a>常用函数</h3><ul>
+<li>push()    令元素x入队</li>
+<li>pop()    令队首元素x出队</li>
+<li>empty()    返回值为布尔类型，若队列为空则返回true，否则为false</li>
+<li>size()    返回queue中元素的个数</li>
+</ul>
+<h3 id="priority-queue内元素优先级设置"><a href="#priority-queue内元素优先级设置" class="headerlink" title="priority_queue内元素优先级设置"></a>priority_queue内元素优先级设置</h3><h4 id="基本元素优先级设置"><a href="#基本元素优先级设置" class="headerlink" title="基本元素优先级设置"></a>基本元素优先级设置</h4><p>此处指的基本数据类型就是 int 型，double 型，char 型等可以直接使用的数据类型，优先队列对他们的优先级设置一般是数字大的优先级高，因此队首元素就是优先队列内元素最大的那个（如果是 char 型，则是字典序最大的）。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//下面两种优先队列的定义是等价的</span></span><br><span class="line">priority_queue&lt;<span class="keyword">int</span>&gt; q;</span><br><span class="line">priority_queue&lt;<span class="keyword">int</span>,<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;,less&lt;<span class="keyword">int</span>&gt; &gt;;<span class="comment">//后面有一个空格</span></span><br></pre></td></tr></table></figure>
+
+<p>其中第二个参数( vector )，是来承载底层数据结构堆的容器，第三个参数( less )，则是一个比较类，<strong>less 表示数字大的优先级高，而 greater 表示数字小的优先级高</strong>。</p>
+<p>如果想让优先队列总是把最小的元素放在队首，只需进行如下的定义：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">priority_queue&lt;<span class="keyword">int</span>,<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;,greater&lt;<span class="keyword">int</span>&gt; &gt;q;</span><br></pre></td></tr></table></figure>
+
+<p>示例代码：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">test1</span><span class="params">()</span></span>&#123;</span><br><span class="line">    <span class="comment">//默认情况下，数值大的在队首位置(降序)</span></span><br><span class="line">    priority_queue&lt;<span class="keyword">int</span>&gt; q;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i  = <span class="number">0</span>;i &lt;= <span class="number">10</span>;i ++)</span><br><span class="line">        q.push(i);</span><br><span class="line">    <span class="keyword">while</span>(!q.empty())&#123;</span><br><span class="line">        <span class="built_in">cout</span>&lt;&lt;q.top()&lt;&lt;<span class="string">" "</span>;</span><br><span class="line">        q.pop();</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="built_in">cout</span>&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">    <span class="comment">//greater&lt;int&gt;表示数值小的优先级越大</span></span><br><span class="line">    priority_queue&lt;<span class="keyword">int</span>,<span class="built_in">vector</span>&lt;<span class="keyword">int</span>&gt;,greater&lt;<span class="keyword">int</span>&gt; &gt; Q;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">int</span> i  = <span class="number">0</span>;i &lt;= <span class="number">10</span>;i ++)</span><br><span class="line">        Q.push(i);</span><br><span class="line">    <span class="keyword">while</span>(!Q.empty())&#123;</span><br><span class="line">        <span class="built_in">cout</span>&lt;&lt;Q.top()&lt;&lt;<span class="string">" "</span>;</span><br><span class="line">        Q.pop();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h4 id="结构体的优先级设置"><a href="#结构体的优先级设置" class="headerlink" title="结构体的优先级设置"></a>结构体的优先级设置</h4><h5 id="方式一：重载运算符-‘-lt-’"><a href="#方式一：重载运算符-‘-lt-’" class="headerlink" title="方式一：重载运算符 ‘&lt;’"></a>方式一：重载运算符 ‘&lt;’</h5><p>可以在结构体内部重载 ‘&lt;’，改变小于号的功能(例如把他重载为大于号)</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">student</span>&#123;</span></span><br><span class="line">    <span class="keyword">int</span> grade;</span><br><span class="line">    <span class="built_in">string</span> name;</span><br><span class="line">    <span class="comment">//重载运算符，grade 值高的优先级大</span></span><br><span class="line">    <span class="keyword">friend</span> <span class="keyword">operator</span> &lt; (student s1,student s2)&#123;</span><br><span class="line">        <span class="keyword">return</span> s1.grade &lt; s2.grade;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>示例代码：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">test2</span><span class="params">()</span></span>&#123;</span><br><span class="line">    priority_queue&lt;student&gt; q;</span><br><span class="line">    student s1,s2,s3;</span><br><span class="line">    s1.grade = <span class="number">90</span>;</span><br><span class="line">    s1.name = <span class="string">"Tom"</span>;</span><br><span class="line">    s2.grade = <span class="number">80</span>;</span><br><span class="line">    s2.name = <span class="string">"Jerry"</span>;</span><br><span class="line">    s3.grade = <span class="number">100</span>;</span><br><span class="line">    s3.name = <span class="string">"Kevin"</span>;</span><br><span class="line">    q.push(s1);</span><br><span class="line">    q.push(s2);</span><br><span class="line">    q.push(s3);</span><br><span class="line">    <span class="keyword">while</span>(!q.empty())&#123;</span><br><span class="line">        <span class="built_in">cout</span>&lt;&lt;q.top().name&lt;&lt;<span class="string">":"</span>&lt;&lt;q.top().grade&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">        q.pop();</span><br><span class="line">    &#125; </span><br><span class="line">&#125;</span><br><span class="line">    <span class="comment">/*</span></span><br><span class="line"><span class="comment">     结果：</span></span><br><span class="line"><span class="comment">        Kevin:100</span></span><br><span class="line"><span class="comment">        Tom:90</span></span><br><span class="line"><span class="comment">        Jerry:80</span></span><br><span class="line"><span class="comment">    */</span></span><br></pre></td></tr></table></figure>
+
+<h5 id="方式二：把重载的函数写在结构体外面"><a href="#方式二：把重载的函数写在结构体外面" class="headerlink" title="方式二：把重载的函数写在结构体外面"></a>方式二：把重载的函数写在结构体外面</h5><p>将比较函数写在结构体外面，作为参数传给优先队列。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">fruit</span>&#123;</span></span><br><span class="line">    <span class="built_in">string</span> name;</span><br><span class="line">    <span class="keyword">int</span> price;</span><br><span class="line">&#125;;</span><br><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">cmp</span>&#123;</span></span><br><span class="line">    <span class="comment">// "&lt;" 表示 price 大的优先级高</span></span><br><span class="line">    <span class="function"><span class="keyword">bool</span> <span class="title">operator</span><span class="params">()</span> <span class="params">(fruit f1,fruit f2)</span></span>&#123;</span><br><span class="line">        <span class="keyword">return</span> f1.price &lt; f2.price;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+
+<p>示例代码：</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">test3</span><span class="params">()</span></span>&#123;</span><br><span class="line">    priority_queue&lt;fruit,<span class="built_in">vector</span>&lt;fruit&gt;,cmp&gt; q;</span><br><span class="line">    fruit f1,f2,f3;</span><br><span class="line">    f1.name = <span class="string">"apple"</span>;</span><br><span class="line">    f1.price = <span class="number">5</span>;</span><br><span class="line">    f2.name = <span class="string">"banana"</span>;</span><br><span class="line">    f2.price = <span class="number">6</span>;</span><br><span class="line">    f3.name = <span class="string">"pear"</span>;</span><br><span class="line">    f3.price = <span class="number">7</span>;</span><br><span class="line">    q.push(f1);</span><br><span class="line">    q.push(f2);</span><br><span class="line">    q.push(f3);</span><br><span class="line">    <span class="keyword">while</span>(!q.empty())&#123;</span><br><span class="line">        <span class="built_in">cout</span>&lt;&lt;q.top().name&lt;&lt;<span class="string">":"</span>&lt;&lt;q.top().price&lt;&lt;<span class="built_in">endl</span>;</span><br><span class="line">        q.pop();</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br><span class="line"><span class="comment">/*</span></span><br><span class="line"><span class="comment"> 结果：</span></span><br><span class="line"><span class="comment">       pear:7</span></span><br><span class="line"><span class="comment">       banana:6</span></span><br><span class="line"><span class="comment">       apple:5</span></span><br><span class="line"><span class="comment">*/</span></span><br></pre></td></tr></table></figure>
+        </div>
+
+        
+            <section class="post-copyright">
+                
+                    <p class="copyright-item">
+                        <span>Author:</span>
+                        <span>Ding Zhi</span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>Permalink:</span>
+                        <span><a href="http://dingzhi.ga/articles/oop-stl-2/">http://dingzhi.ga/articles/oop-stl-2/</a></span>
+                    </p>
+                
+                
+                    <p class="copyright-item">
+                        <span>License:</span>
+                        <span>Attribution-NonCommercial-NoDerivs 3.0 Unported <a href="https://creativecommons.org/licenses/by-nc-nd/3.0/deed.zh" rel="external nofollow">(CC BY-NC-ND 3.0)</a></span>
+                    </p>
+                
+                
+
+            </section>
+        
+        <section class="post-tags">
+            <div>
+                <span>Tag(s):</span>
+                <span class="tag">
+                    
+                    
+                        <a href="/tags/C-C/"># C/C++</a>
+                    
+                        <a href="/tags/数据结构/"># 数据结构</a>
+                    
+                        <a href="/tags/STL/"># STL</a>
+                    
+                        
+                </span>
+            </div>
+            <div>
+                <a href="javascript:window.history.back();">back</a>
+                <span>· </span>
+                <a href="/">home</a>
+            </div>
+        </section>
+        <section class="post-nav">
+            
+                <a class="prev" rel="prev" href="/articles/network-2/">计算机网络学习笔记(二)——物理层</a>
+            
+            
+            <a class="next" rel="next" href="/articles/network-1/">计算机网络学习笔记(一)——计算机网络概述</a>
+            
+        </section>
+
+
+    </article>
+</div>
+
+
+        </div>
+        <footer id="footer" class="footer">
+    <title>打赏</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<!--<script type="text/javascript" src="http://static.tctip.com/tctip-1.0.2.js"></script>-->
+<script type="text/javascript" src="http://dingzhi.ga/js/tctip-1.0.3.min.js"></script>
+<script>
+  new tctip({
+    top: '20%',
+    button: {
+      id: 9,
+      type: 'dashang'
+    },
+    list: [
+      {
+        type: 'alipay',
+        qrImg: 'http://dingzhi.ga/images/alipay.jpg'
+      }, {
+        type: 'wechat',
+        qrImg: 'http://dingzhi.ga/images/wechat.jpg'
+      }
+    ]
+  }).init()
+</script>
+友情链接<span lang="EN-US"> | <a href="http://fenghe.us/" target="_blank">Fenghe's
+Blog |</a>
+<a href="http://www.kamzero.cn" target="_blank">Sherry's
+Blog |</a>
+<span>© Ding Zhi 2019 | All Rights Reserved</span>
+</span></footer>
+    </div>
+</body>
+</html>
